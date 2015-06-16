@@ -37,6 +37,7 @@
 	},
 	"settings": {
 		"rulers": [89],
+		"ensure_newline_at_eof_on_save": true,
 		"trim_trailing_white_space_on_save": true
 	}
 }
@@ -82,4 +83,27 @@
 	"translate_tabs_to_spaces": false,
 	"rulers": []
 }
+````
+
+## Get ready
+````
+sudo su - postgres
+createuser -DRPS foobar
+createdb foobar -O foobar
+
+mkvirtualenv foobar
+pip install mezzanine fabric django-debug-toolbar south psycopg2
+mezzanine-project foobar
+cd foobar
+
+# Edit local_settings.py to use postgres
+# Edit settings.py for TIMEZONE
+# Add sublime-project
+# Ignore *.sublime-workspace
+
+python manage.py createdb --noinput --nodata
+python manage.py runsver
+git init
+git add .
+git ci -m "Initial commit."
 ````
