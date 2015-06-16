@@ -1,3 +1,21 @@
+## Packages
+- Djaneiro
+- Emmet
+- Emmet CSS Snippets
+- Git
+- Markdown Preview
+- Mercurial for Sublime
+- Monokai Neu
+- nginx
+- PyV8
+- SublimeLinter
+- SublimeLinter-flake8
+- SublimeLinter-jshint
+- Syntax highlighting for Sass
+- Terminal
+- VCS gutter
+- Wrap plus
+
 ## Foobar.sublime-project
 ````json
 {
