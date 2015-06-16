@@ -100,6 +100,12 @@
 }
 ````
 
+## One-time dependencies (to support image utilities)
+````
+apt-get install libjpeg8 libjpeg8-dev
+apt-get build-dep python-imaging
+````
+
 ## Get ready
 ````
 sudo su - postgres
