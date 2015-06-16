@@ -26,7 +26,6 @@
 	".git",
 	".hg",
 	"CVS",
-	".meteor",
 	".sass-cache"
 ]
 ````
@@ -37,7 +36,15 @@
 	"folders":
 	[
 		{
-			"path": "."
+			"path": ".",
+			"folder_exclude_patterns":
+			[
+				"bower_components",
+				"node_modules",
+				".git",
+				".hg",
+				".sass-cache"
+			]
 		}
 	],
 	"SublimeLinter":
@@ -100,10 +107,25 @@
 }
 ````
 
-## One-time dependencies (to support image utilities)
+## One-time dependencies
 ````
-apt-get install libjpeg8 libjpeg8-dev
-apt-get build-dep python-imaging
+# Django/Mezzanine dependencies
+sudo apt-get install libjpeg8 libjpeg8-dev postgresql python-pip git
+sudo apt-get build-dep python-imaging
+sudo pip install -U pip virtualenvwrapper mercurial
+echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
+
+## Sass dependencies
+sudo gem install sass
+
+# NPM
+sudo apt-get install npm
+sudo npm update -g npm
+ln -s /usr/bin/nodejs /usr/bin/node
+chown -R $(whoami) ~/.npm
+
+# Grunt and Bower
+sudo npm install -g grunt-cli bower
 ````
 
 ## Get ready
@@ -116,15 +138,28 @@ mkvirtualenv foobar
 pip install mezzanine fabric django-debug-toolbar south psycopg2
 mezzanine-project foobar
 cd foobar
-
 # Edit local_settings.py to use postgres
 # Edit settings.py for TIMEZONE
 # Add sublime-project
-# Ignore *.sublime-workspace
-
 python manage.py createdb --noinput --nodata
-python manage.py runsver
-git init
-git add .
-git ci -m "Initial commit."
+# Commit: "Base installation of Mezzanine X.X.X."
+
+django-admin.py startapp theme
+# Add "theme" to INSTALLED_APPS before "mezzanine.boot"
+# Edit TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "theme", "templates"),)
+# Commit: Added theme app.
+
+mkdir -p theme/static
+cd theme/static
+# Copy this repo's static dir to theme/static
+npm update --save-dev
+bower install bootstrap-sass --save-dev
+python manage.py collecttemplates -t base.html # theme/templates/base.html created
+# All CSS is now at theme/static/css/style.css (Bootstrap + Custom styles)
+# All JS is now at theme/static/js/scripts.js (jQuery + Bootstrap)
+# Update base.html to point to new JS and CSS locations
+# Commit: Added static resources and dependencies.
+
+# From now on, CSS is generated with "grunt watch"
+# JS with "grunt concat"
 ````

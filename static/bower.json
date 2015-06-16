@@ -1,0 +1,17 @@
+{
+	"name": "foobar",
+	"version": "1.0.0",
+	"authors": [
+		"Your Name <name@email.com>"
+	],
+	"description": "Foobar static files.",
+	"license": "MIT",
+	"homepage": "http://foobar.com",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	]
+}
