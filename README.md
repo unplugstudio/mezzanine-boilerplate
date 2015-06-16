@@ -16,6 +16,21 @@
 - VCS gutter
 - Wrap plus
 
+## Preferences.sublime-settings
+````json
+// User settings
+"atomic_save": false,
+"folder_exclude_patterns":
+[
+	".svn",
+	".git",
+	".hg",
+	"CVS",
+	".meteor",
+	".sass-cache"
+]
+````
+
 ## Foobar.sublime-project
 ````json
 {
