@@ -1,0 +1,15 @@
+syntax: glob
+*.pyc
+*.pyo
+*.db
+.DS_Store
+.coverage
+local_settings.py
+*.sublime-workspace
+*.map
+
+syntax: regexp
+^static/
+bower_components/
+node_modules/
+.sass-cache/

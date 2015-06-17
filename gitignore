@@ -1,0 +1,12 @@
+*.pyc
+*.pyo
+*.db
+.DS_Store
+.coverage
+local_settings.py
+*.sublime-workspace
+*.map
+/static
+**/bower_components/
+**/node_modules/
+**/.sass-cache/
