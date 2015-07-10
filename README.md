@@ -1,4 +1,5 @@
 ## Packages
+- Anaconda
 - Djaneiro
 - Emmet
 - Emmet CSS Snippets
@@ -7,9 +8,7 @@
 - Mercurial for Sublime
 - Monokai Neu
 - nginx
-- PyV8
 - SublimeLinter
-- SublimeLinter-flake8
 - SublimeLinter-jshint
 - Syntax highlighting for Sass
 - Terminal
@@ -47,18 +46,10 @@
 			]
 		}
 	],
-	"SublimeLinter":
-	{
-		"linters":
-		{
-			"flake8": {
-				"max-line-length": 89,
-				"exclude": ["E501", "E731"]
-			}
-		}
-	},
 	"settings": {
+		"python_interpreter": "/path/to/virtualenv/bin/python",
 		"rulers": [89],
+		"pep8_max_line_length": 89,
 		"ensure_newline_at_eof_on_save": true,
 		"trim_trailing_white_space_on_save": true
 	}
@@ -104,6 +95,13 @@
 	"tab_size": 4,
 	"translate_tabs_to_spaces": false,
 	"rulers": []
+}
+````
+
+## Markdown.sublime-settings
+````json
+{
+	"rulers": [79]
 }
 ````
 
