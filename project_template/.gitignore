@@ -1,11 +1,11 @@
 *.pyc
 *.pyo
 *.db
-*.pot
-*.doctree
 *.sublime-workspace
 .DS_Store
 .coverage
-/project_template/static/
-build/
+.sass-cache
+local_settings.py
 node_modules/
+theme/static/build/
+/static

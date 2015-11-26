@@ -1,0 +1,4 @@
+Mezzanine
+django-debug-toolbar
+fabric
+psycopg2

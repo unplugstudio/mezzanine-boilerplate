@@ -38,7 +38,6 @@
 			"path": ".",
 			"folder_exclude_patterns":
 			[
-				"bower_components",
 				"node_modules",
 				".git",
 				".hg",
@@ -113,17 +112,16 @@ sudo apt-get build-dep python-imaging
 sudo pip install -U pip virtualenvwrapper mercurial
 echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 
-## Sass dependencies
-sudo gem install sass
+# Node version manager
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+source .bashrc
 
-# NPM
-sudo apt-get install npm
-sudo npm update -g npm
-ln -s /usr/bin/nodejs /usr/bin/node
-chown -R $(whoami) ~/.npm
+#Node (and npm)
+nvm install 4.2.2 # Latest LTS
+nvm alias default 4.2.2
 
-# Grunt and Bower
-sudo npm install -g grunt-cli bower
+# Grunt
+npm install -g grunt-cli
 ````
 
 ## Get ready
@@ -133,7 +131,7 @@ createuser -DRPS foobar
 createdb foobar -O foobar
 
 mkvirtualenv foobar
-pip install mezzanine fabric django-debug-toolbar south psycopg2
+pip install mezzanine fabric django-debug-toolbar psycopg2
 mezzanine-project foobar
 cd foobar
 # Edit local_settings.py to use postgres
@@ -151,7 +149,6 @@ mkdir -p theme/static
 cd theme/static
 # Copy this repo's static dir to theme/static
 npm update --save-dev
-bower install bootstrap-sass --save-dev
 python manage.py collecttemplates -t base.html # theme/templates/base.html created
 # All CSS is now at theme/static/css/style.css (Bootstrap + Custom styles)
 # All JS is now at theme/static/js/scripts.js (jQuery + Bootstrap)

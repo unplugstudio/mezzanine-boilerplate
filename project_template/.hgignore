@@ -2,14 +2,13 @@ syntax: glob
 *.pyc
 *.pyo
 *.db
+*.sublime-workspace
 .DS_Store
 .coverage
+.sass-cache
 local_settings.py
-*.sublime-workspace
-*.map
+node_modules/
+theme/static/build/
 
 syntax: regexp
 ^static/
-bower_components/
-node_modules/
-.sass-cache/

@@ -1,0 +1,107 @@
+/* Grid */
+
+	.container-fluid, .container {
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: (_size(gutter, normal) / 2);
+		padding-right: (_size(gutter, normal) / 2);
+		max-width: _size(container);
+		width: 100%;
+	}
+
+	.row {
+		display: flex;
+		flex: 0 1 auto;
+		flex-wrap: wrap;
+		flex-direction: row;
+		margin-left: (_size(gutter, normal) * -0.5);
+		margin-right: (_size(gutter, normal) * -0.5);
+
+
+		&.reverse {
+			flex-direction: row-reverse;
+		}
+
+		&.vertical {
+			flex-direction: column;
+
+			&.reverse {
+				flex-direction: column-reverse;
+			}
+		}
+	}
+
+	// Make all columns in all viewports
+
+	@each $breakpoint in map-keys($mq-breakpoints) {
+		@include mq($from: $breakpoint) {
+			@for $i from 1 through _misc(columns) {
+				.col-#{$breakpoint}-#{$i} {
+					width: percentage($i / _misc(columns));
+					padding-left: (_size(gutter, normal) / 2);
+					padding-right: (_size(gutter, normal) / 2);
+				}
+			}
+		}
+	}
+
+	// Gutter size variants
+
+	@each $breakpoint in map-keys($mq-breakpoints) {
+		@include mq($from: $breakpoint) {
+			@each $variant in map-keys(_size(gutter)) {
+				.row-#{$breakpoint}-#{$variant} {
+					margin-left: (_size(gutter, $variant) * -0.5);
+					margin-right: (_size(gutter, $variant) * -0.5);
+
+					> [class^='col-'],
+					> [class*=' col-'] {
+						padding-left: (_size(gutter, $variant) / 2);
+						padding-right: (_size(gutter, $variant) / 2)
+					}
+				}
+			}
+		}
+	}
+
+	// Vertical alignment for every column in row
+
+	@each $breakpoint in map-keys($mq-breakpoints) {
+		@include mq($from: $breakpoint) {
+			.row-#{$breakpoint}-top    { align-items: flex-start; }
+			.row-#{$breakpoint}-middle { align-items: center; }
+			.row-#{$breakpoint}-bottom { align-items: flex-end; }
+		}
+	}
+
+	// Horizontal alignment for every column in row
+
+	@each $breakpoint in map-keys($mq-breakpoints) {
+		@include mq($from: $breakpoint) {
+			.row-#{$breakpoint}-left    { justify-content: flex-start; }
+			.row-#{$breakpoint}-center  { justify-content: center; }
+			.row-#{$breakpoint}-right   { justify-content: flex-end; }
+			.row-#{$breakpoint}-around  { justify-content: space-around; }
+			.row-#{$breakpoint}-between { justify-content: space-between; }
+		}
+	}
+
+	// Flex column reordering
+
+	@each $breakpoint in map-keys($mq-breakpoints) {
+		@include mq($from: $breakpoint) {
+			.col-#{$breakpoint}-first { order: -1; }
+			.col-#{$breakpoint}-last  { order: 1; }
+			.col-#{$breakpoint}-flow  { order: 0; }
+		}
+	}
+
+	// Alignment per column
+
+	@each $breakpoint in map-keys($mq-breakpoints) {
+		@include mq($from: $breakpoint) {
+			.col-#{$breakpoint}-top    { align-self: flex-start; }
+			.col-#{$breakpoint}-middle { align-self: center; }
+			.col-#{$breakpoint}-bottom { align-self: flex-end; }
+		}
+	}

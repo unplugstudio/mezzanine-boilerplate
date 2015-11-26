@@ -1,0 +1,74 @@
+/// Makes an element's :before pseudoelement a FontAwesome icon.
+/// @param {string} $content Optional content value to use.
+@mixin icon($content: false) {
+
+	text-decoration: none;
+
+	&:before {
+
+		@if $content {
+			content: $content;
+		}
+
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-font-smoothing: antialiased;
+		font-family: FontAwesome;
+		font-style: normal;
+		font-weight: normal;
+		text-transform: none !important;
+
+	}
+
+}
+
+/// Creates the circled chevron used through-out the site
+/// @param {string} $content Optional content value to use.
+/// @param {string} $color Optional color value for the font and border.
+	@mixin chevron($content: '\203A', $color: currentColor) {
+		&:after {
+			border-radius: 100%;
+			border: 2px solid $color;
+			color: $color;
+			content: $content;
+			display: inline-block;
+			font-size: 2em;
+			font-weight: _font(weight-bold);
+			height: 1em;
+			line-height: 0.725;
+			text-align: center;
+			vertical-align: sub;
+			width: 1em;
+		}
+	}
+
+/// Place a color overlay over an element
+/// Implemented with opacity for maximum IE compatibility
+/// @param {string} $color Optional color to use as tint
+/// @param {number} $opacity Optional opacity of the tint
+	@mixin tint($color: #888, $opacity: 0.3) {
+		position: relative;
+
+		&:before {
+			background-color: $color;
+			content: '';
+			height: 100%;
+			left: 0;
+			opacity: $opacity;
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
+
+		> .container {
+			// Bring the container above the gray overlay
+			position: relative;
+		}
+	}
+
+/// Applies padding to an element, taking the current element-margin value into account.
+/// @param {mixed} $tb Top/bottom padding.
+/// @param {mixed} $lr Left/right padding.
+/// @param {list} $pad Optional extra padding (in the following order top, right, bottom, left)
+@mixin padding($tb, $lr, $pad: (0,0,0,0)) {
+	padding: ($tb + nth($pad,1)) ($lr + nth($pad,2)) max(0.1em, $tb - _size(element-margin) + nth($pad,3)) ($lr + nth($pad,4));
+}
