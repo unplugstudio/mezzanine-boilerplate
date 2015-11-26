@@ -22,8 +22,7 @@ class Command(MezzanineRunserverCommand):
     def start_grunt(self):
         self.stdout.write('>>> Starting grunt')
         self.grunt_process = subprocess.Popen(
-            ['grunt --gruntfile={0}'.format(settings.GRUNT_PATH)],
-            shell=True,
+            ['grunt', '--gruntfile', str(settings.GRUNT_PATH)],
             stdin=subprocess.PIPE,
             stdout=self.stdout,
             stderr=self.stderr,
