@@ -288,6 +288,13 @@ OPTIONAL_APPS = (
     PACKAGE_NAME_GRAPPELLI,
 )
 
+###################
+# CUSTOM SETTINGS #
+###################
+
+# Path to the Gruntfile
+GRUNT_PATH = os.path.join(PROJECT_ROOT, "theme", "static", "Gruntfile.js")
+
 ##################
 # LOCAL SETTINGS #
 ##################
