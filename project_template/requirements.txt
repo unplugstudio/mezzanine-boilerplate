@@ -1,4 +1,4 @@
-Mezzanine
+Mezzanine==4.0.1
 django-debug-toolbar
 fabric
 psycopg2
