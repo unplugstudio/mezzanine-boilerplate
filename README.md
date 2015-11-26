@@ -1,3 +1,26 @@
+# Mezzanine Guidelines
+
+## Quickstart
+````
+sudo su - postgres
+createuser -DRPS foobar
+createdb foobar -O foobar
+
+git clone https://gitlab.com/jerivas/django-mezzanine-guidelines.git
+
+mkvirtualenv foobar
+pip install mezzanine
+mezzanine-project --template django-mezzanine-guidelines/project_template --extension py,json,md,sublime-project foobar
+cd foobar
+pip install -r requirements.txt
+python manage.py createdb --noinput --nodata
+
+cd theme/static
+npm install
+cd ../..
+python manage.py gruntserver
+````
+
 ## Packages
 - Anaconda
 - Djaneiro
@@ -122,39 +145,4 @@ nvm alias default 4.2.2
 
 # Grunt
 npm install -g grunt-cli
-````
-
-## Get ready
-````
-sudo su - postgres
-createuser -DRPS foobar
-createdb foobar -O foobar
-
-mkvirtualenv foobar
-pip install mezzanine fabric django-debug-toolbar psycopg2
-mezzanine-project foobar
-cd foobar
-# Edit local_settings.py to use postgres
-# Edit settings.py for TIMEZONE
-# Add sublime-project
-python manage.py createdb --noinput --nodata
-# Commit: "Base installation of Mezzanine X.X.X."
-
-django-admin.py startapp theme
-# Add "theme" to INSTALLED_APPS before "mezzanine.boot"
-# Edit TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "theme", "templates"),)
-# Commit: Added theme app.
-
-mkdir -p theme/static
-cd theme/static
-# Copy this repo's static dir to theme/static
-npm update --save-dev
-python manage.py collecttemplates -t base.html # theme/templates/base.html created
-# All CSS is now at theme/static/css/style.css (Bootstrap + Custom styles)
-# All JS is now at theme/static/js/scripts.js (jQuery + Bootstrap)
-# Update base.html to point to new JS and CSS locations
-# Commit: Added static resources and dependencies.
-
-# From now on, CSS is generated with "grunt watch"
-# JS with "grunt concat"
 ````
