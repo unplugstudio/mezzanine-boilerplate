@@ -20,7 +20,13 @@
 		border-width:		1px,
 		element-height:		2.5em,
 		element-margin:		2em,
-		container:			1200px,
+		container: (
+			xs:				95%,
+			sm:				95%,
+			md:				95%,
+			lg:				95%,
+			xl:				1200px
+		),
 		gutter: (
 			slim:			0em,
 			normal:			2em,
