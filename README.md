@@ -1,7 +1,7 @@
 # Mezzanine Guidelines
 
 ## Quickstart
-````
+```
 sudo su - postgres
 createuser -DRPS foobar
 createdb foobar -O foobar
@@ -19,7 +19,7 @@ cd theme/static
 npm install
 cd ../..
 python manage.py gruntserver
-````
+```
 
 ## Packages
 - Anaconda
@@ -39,7 +39,7 @@ python manage.py gruntserver
 - Wrap plus
 
 ## Preferences.sublime-settings
-````json
+```json
 // User settings
 "atomic_save": false,
 "folder_exclude_patterns":
@@ -50,10 +50,10 @@ python manage.py gruntserver
 	"CVS",
 	".sass-cache"
 ]
-````
+```
 
 ## Foobar.sublime-project
-````json
+```json
 {
 	"folders":
 	[
@@ -76,21 +76,21 @@ python manage.py gruntserver
 		"trim_trailing_white_space_on_save": true
 	}
 }
-````
+```
 
 ## Python (Django).sublime-settings
 
-````json
+```json
 {
 	"tab_size": 4,
 	"translate_tabs_to_spaces": true,
 	"indent_to_bracket": true,
 	"trim_trailing_white_space_on_save": true
 }
-````
+```
 
 ## HTML (Django).sublime-settings
-````json
+```json
 {
 	"extensions":
 	[
@@ -100,35 +100,35 @@ python manage.py gruntserver
 	"translate_tabs_to_spaces": false,
 	"rulers": []
 }
-````
+```
 
 ## CSS.sublime-settings
-````json
+```json
 {
 	"tab_size": 4,
 	"translate_tabs_to_spaces": false,
 	"rulers": []
 }
-````
+```
 
 ## SCSS.sublime-settings
-````json
+```json
 {
 	"tab_size": 4,
 	"translate_tabs_to_spaces": false,
 	"rulers": []
 }
-````
+```
 
 ## Markdown.sublime-settings
-````json
+```json
 {
 	"rulers": [79]
 }
-````
+```
 
 ## One-time dependencies
-````
+```
 # Django/Mezzanine dependencies
 sudo apt-get install libjpeg8 libjpeg8-dev postgresql python-pip git
 sudo apt-get build-dep python-imaging
@@ -145,4 +145,4 @@ nvm alias default 4.2.2
 
 # Grunt
 npm install -g grunt-cli
-````
+```
