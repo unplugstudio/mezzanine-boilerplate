@@ -143,6 +143,7 @@ source .bashrc
 #Node (and npm)
 nvm install 4.2.2 # Latest LTS
 nvm alias default 4.2.2
+npm update -g npm
 
 # Grunt
 npm install -g grunt-cli eslint
