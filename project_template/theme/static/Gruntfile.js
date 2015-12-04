@@ -1,59 +1,62 @@
 module.exports = function(grunt) {
 
 	grunt.initConfig({
-		pkg: grunt.file.readJSON("package.json"),
+		pkg: grunt.file.readJSON('package.json'),
 		// SASS task
 		sass: {
-			options:{
-				outputStyle: "nested",
-				sourceMap: true
+			options: {
+				outputStyle: 'nested',
+				sourceMap: true,
 			},
 			dist: {
 				files: {
-					"build/main.css": "sass/main.scss"
-				}
-			}
+					'build/main.css': 'sass/main.scss',
+				},
+			},
 		},
 		// Autoprefixer task
 		autoprefixer: {
-			dist:{
+			dist: {
 				options: {
-					map: true // Create sourcemap
+					map: true,
 				},
-				files:{
-					"build/main.css": "build/main.css"
-				}
-			}
+				files: {
+					'build/main.css': 'build/main.css',
+				},
+			},
 		},
 		// Concatenation task
 		concat: {
 			dist: {
 				files: {
-					"build/main.js": [
-						"js/main.js"
-					]
-				}
-			}
+					'build/main.js': [
+						'js/main.js',
+					],
+				},
+			},
 		},
 		// Watch task
 		watch: {
 			css: {
-				files: "sass/**/*.scss",
-				tasks: ["sass", "autoprefixer"]
+				files: 'sass/**/*.scss',
+				tasks: ['sass', 'autoprefixer'],
 			},
 			js: {
-				files: "js/**/*.js",
-				tasks: ["concat"]
-			}
-		}
+				files: 'js/**/*.js',
+				tasks: ['concat'],
+			},
+			options: {
+				livereload: true,
+			},
+		},
 	});
 
 	// Node dependencies
-	grunt.loadNpmTasks("grunt-sass");
-	grunt.loadNpmTasks("grunt-contrib-watch");
-	grunt.loadNpmTasks("grunt-autoprefixer");
-	grunt.loadNpmTasks("grunt-contrib-concat");
+	grunt.loadNpmTasks('grunt-sass');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-autoprefixer');
+	grunt.loadNpmTasks('grunt-contrib-concat');
 
 	// Run all tasks and keep watching when invoking grunt without args
-	grunt.registerTask("default", ["concat", "sass", "autoprefixer", "watch"]);
+	grunt.registerTask('default', ['concat', 'sass', 'autoprefixer', 'watch']);
 };

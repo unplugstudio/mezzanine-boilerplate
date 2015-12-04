@@ -16,13 +16,14 @@ pip install -r requirements.txt
 python manage.py createdb --noinput --nodata
 
 cd theme/static
-npm install
+npm update --save # Don't use npm install
 cd ../..
 python manage.py gruntserver
 ```
 
 ## Packages
 - Anaconda
+- Babel
 - Djaneiro
 - Emmet
 - Emmet CSS Snippets
@@ -32,7 +33,7 @@ python manage.py gruntserver
 - Monokai Neu
 - nginx
 - SublimeLinter
-- SublimeLinter-jshint
+- SublimeLinter-eslint
 - Syntax highlighting for Sass
 - Terminal
 - VCS gutter
@@ -144,5 +145,5 @@ nvm install 4.2.2 # Latest LTS
 nvm alias default 4.2.2
 
 # Grunt
-npm install -g grunt-cli
+npm install -g grunt-cli eslint
 ```
