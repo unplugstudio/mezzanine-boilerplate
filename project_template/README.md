@@ -2,4 +2,4 @@
 
 A Mezzanine project based on [mezzanine-guidelines].
 
-[mezzanine-guidelines]: https://gitlab.com/jerivas/django-mezzanine-guidelines/blob/v1.0.0/README.md
+[mezzanine-guidelines]: https://gitlab.com/jerivas/django-mezzanine-guidelines/blob/v1.1.0/README.md
