@@ -56,6 +56,14 @@
 	}
 }
 
+/// Create the grid column gutter using padding.
+/// @param {number} $gutter [_size(gutter, normal)] - Desired gutter size
+@mixin grid-col-gutter($gutter: _size(gutter, normal)) {
+	max-width: 100%;
+	padding-left: ($gutter * 0.5);
+	padding-right: ($gutter * 0.5);
+}
+
 /// Create a grid column.
 /// @param {number | map} $sizing [100%] - Column width or a map with the widths for all breakpoints
 /// @param {number} $gutter [_size(gutter, normal)] - Desired gutter size
@@ -63,9 +71,7 @@
 ///	@include grid-col((xs: 12, md: 6, xl: 20%))
 ///	// Becomes full-width in xs, half-width in md, and fifth-width in xl
 @mixin grid-col($sizing: 100%, $gutter: _size(gutter, normal)) {
-	max-width: 100%;
-	padding-left: ($gutter * 0.5);
-	padding-right: ($gutter * 0.5);
+	@include grid-col-gutter($gutter)
 
 	@if type-of($sizing) == 'map' {
 		@each $breakpoint, $width in $sizing {
