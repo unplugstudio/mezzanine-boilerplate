@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'build/main.css': 'sass/main.scss',
+					'build/main.css': 'scss/main.scss',
 				},
 			},
 		},
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
 		// Watch task
 		watch: {
 			css: {
-				files: 'sass/**/*.scss',
+				files: 'scss/**/*.scss',
 				tasks: ['sass', 'autoprefixer'],
 			},
 			js: {
