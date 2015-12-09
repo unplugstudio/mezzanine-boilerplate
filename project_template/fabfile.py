@@ -7,20 +7,17 @@ import sys
 from contextlib import contextmanager
 from functools import wraps
 from getpass import getpass, getuser
-from glob import glob
 from importlib import import_module
 from posixpath import join
 
 from mezzanine.utils.conf import real_project_name
 
-from fabric.api import abort, env, cd, prefix, sudo as _sudo, run as _run, \
-    hide, task, local
+from fabric.api import abort, env, cd, prefix, run as _run, hide, task, local
 from fabric.context_managers import settings as fab_settings
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists, upload_template
 from fabric.contrib.project import rsync_project
 from fabric.colors import yellow, green, blue, red
-from fabric.decorators import hosts
 
 
 ################
@@ -48,30 +45,40 @@ env.user = conf.get("SSH_USER", getuser())
 env.password = conf.get("SSH_PASS", None)
 env.key_filename = conf.get("SSH_KEY_PATH", None)
 env.hosts = conf.get("HOSTS", [""])
+env.live_subdomain = conf.get("LIVE_SUBDOMAIN", None)
+env.live_domain = conf.get("LIVE_DOMAIN", None)
+env.live_host = "%s.%s" % (env.live_subdomain, env.live_domain) if (
+    env.live_subdomain) else env.live_domain
 
 env.proj_name = conf.get("PROJECT_NAME", env.proj_app)
-env.venv_home = conf.get("VIRTUALENV_HOME", "/home/%s/.virtualenvs" % env.user)
+env.venv_home = "/home/%s/.virtualenvs" % env.user
 env.venv_path = join(env.venv_home, env.proj_name)
-env.proj_path = "/home/%s/mezzanine/%s" % (env.user, env.proj_name)
+env.proj_path = "/home/%s/webapps/%s" % (env.user, env.proj_name)
 env.manage = "%s/bin/python %s/manage.py" % (env.venv_path, env.proj_path)
-env.domains = conf.get("DOMAINS", [conf.get("LIVE_HOSTNAME", env.hosts[0])])
-env.domains_nginx = " ".join(env.domains)
-env.domains_regex = "|".join(env.domains)
+env.domains = conf.get("DOMAINS", env.live_host)
 env.domains_python = ", ".join(["'%s'" % s for s in env.domains])
-env.ssl_disabled = "#" if len(env.domains) > 1 else ""
 env.vcs_tools = ["git", "hg"]
 env.deploy_tool = conf.get("DEPLOY_TOOL", "rsync")
 env.reqs_path = conf.get("REQUIREMENTS_PATH", None)
 env.locale = conf.get("LOCALE", "en_US.UTF-8")
+env.twitter_period = conf.get("TWITTER_PERIOD", None)
 env.num_workers = conf.get("NUM_WORKERS",
                            "multiprocessing.cpu_count() * 2 + 1")
 
 env.secret_key = conf.get("SECRET_KEY", "")
 env.nevercache_key = conf.get("NEVERCACHE_KEY", "")
 
+env.email_user = conf.get("EMAIL_USER", None)
+env.email_pass = conf.get("EMAIL_PASS", None)
+env.default_email = conf.get("DEFAULT_EMAIL", None)
+if not (env.email_user and env.email_pass and env.default_email):
+    env.use_email = "#"
+else:
+    env.use_email = ""
+
 # Remote git repos need to be "bare" and reside separated from the project
 if env.deploy_tool == "git":
-    env.repo_path = "/home/%s/git/%s.git" % (env.user, env.proj_name)
+    env.repo_path = "/home/%s/webapps/git_app/repos/%s.git" % (env.user, env.proj_name)
 else:
     env.repo_path = env.proj_path
 
@@ -85,21 +92,10 @@ else:
 # also run.
 
 templates = {
-    "nginx": {
-        "local_path": "deploy/nginx.conf.template",
-        "remote_path": "/etc/nginx/sites-enabled/%(proj_name)s.conf",
-        "reload_command": "service nginx restart",
-    },
     "supervisor": {
         "local_path": "deploy/supervisor.conf.template",
-        "remote_path": "/etc/supervisor/conf.d/%(proj_name)s.conf",
+        "remote_path": "/home/%(user)s/etc/supervisor/conf.d/%(proj_name)s.conf",
         "reload_command": "supervisorctl update gunicorn_%(proj_name)s",
-    },
-    "cron": {
-        "local_path": "deploy/crontab.template",
-        "remote_path": "/etc/cron.d/%(proj_name)s",
-        "owner": "root",
-        "mode": "600",
     },
     "gunicorn": {
         "local_path": "deploy/gunicorn.conf.py.template",
@@ -110,6 +106,59 @@ templates = {
         "remote_path": "%(proj_path)s/%(proj_app)s/local_settings.py",
     },
 }
+
+
+###################################
+# Wrappers for the Webfaction API #
+###################################
+
+def get_webf_session():
+    """
+    Return an instance of a Webfaction server and a session for authentication
+    to make further API calls.
+    """
+    import xmlrpclib
+    server = xmlrpclib.ServerProxy("https://api.webfaction.com/")
+    print("Logging in to Webfaction as %s." % env.user)
+    if env.password is None:
+        env.password = getpass(
+            "Enter Webfaction password for user %s: " % env.user)
+    session, account = server.login(env.user, env.password)
+    print("Succesfully logged in as %s." % env.user)
+    return server, session, account
+
+
+def get_webf_obj(server, session, obj_type, obj_name, subdomain=None):
+    """
+    Check the existence of an object in the server. Return the object
+    if found, False if not. A simple wrapper for the "list_XXX" API methods.
+    """
+    # Get a list of objects from the API
+    obj_list = getattr(server, "list_%ss" % obj_type)(session)
+    # Choose a key according to the object type
+    key_map = {"domain": "domain", "db_user": "username"}
+    key = key_map.get(obj_type, "name")
+    # Filter the list by key and get a single object
+    try:
+        obj = [item for item in obj_list if item[key] == obj_name][0]
+    # If the list is empty, there's no match, return False
+    except IndexError:
+        return False
+    else:
+        # If we're querying for a subdomain, let's check it's there
+        if key == "domain" and subdomain is not None:
+            return obj if subdomain in obj["subdomains"] else False
+        # Else just return the object we already found
+        return obj
+
+
+def del_webf_obj(server, session, obj_type, obj_name, *args):
+    """
+    Remove and object from the server. A simple wrapper for the "delete_XXX"
+    API methods.
+    """
+    obj = getattr(server, "delete_%s" % obj_type)(session, obj_name, *args)
+    return obj
 
 
 ######################################
@@ -192,17 +241,6 @@ def run(command, show=True, *args, **kwargs):
         return _run(command, *args, **kwargs)
 
 
-@task
-def sudo(command, show=True, *args, **kwargs):
-    """
-    Runs a command as sudo on the remote server.
-    """
-    if show:
-        print_command(command)
-    with hide("running"):
-        return _sudo(command, *args, **kwargs)
-
-
 def log_call(func):
     @wraps(func)
     def logged(*args, **kawrgs):
@@ -234,12 +272,10 @@ def upload_template_and_reload(name):
         local_path = os.path.join(project_root, local_path)
     remote_path = template["remote_path"]
     reload_command = template.get("reload_command")
-    owner = template.get("owner")
-    mode = template.get("mode")
     remote_data = ""
     if exists(remote_path):
         with hide("stdout"):
-            remote_data = sudo("cat %s" % remote_path, show=False)
+            remote_data = run("cat %s" % remote_path, show=False)
     with open(local_path, "r") as f:
         local_data = f.read()
         # Escape all non-string-formatting-placeholder occurrences of '%':
@@ -250,13 +286,22 @@ def upload_template_and_reload(name):
     clean = lambda s: s.replace("\n", "").replace("\r", "").strip()
     if clean(remote_data) == clean(local_data):
         return
-    upload_template(local_path, remote_path, env, use_sudo=True, backup=False)
-    if owner:
-        sudo("chown %s %s" % (owner, remote_path))
-    if mode:
-        sudo("chmod %s %s" % (mode, remote_path))
+    upload_template(local_path, remote_path, env, use_sudo=False, backup=False)
     if reload_command:
-        sudo(reload_command)
+        run(reload_command)
+
+
+def cpmedia(upload=True):
+    """
+    Copy media files between the remote and local environments.
+    The upload param determines the direction of the transfer.
+    """
+    # The empty last part ends the join() with a separator
+    local_dir = join(os.getcwd(), "static", "media", "")
+    remote_dir = join(static(), "media", "")
+    excludes = [".thumbnails"]
+    rsync_project(remote_dir=remote_dir, local_dir=local_dir, exclude=excludes,
+                  upload=upload)
 
 
 def rsync_upload():
@@ -291,12 +336,13 @@ def vcs_upload():
         with cd(env.repo_path):
             if not exists("%s/.hg" % env.repo_path):
                 run("hg init")
-                print(env.repo_path)
             with fab_settings(warn_only=True):
-                push = local("hg push -f %s" % remote_path)
+                push = local(
+                    "hg push --config ui.remotecmd=/home/%s/bin/hg -f %s" %
+                    (env.user, remote_path))
                 if push.return_code == 255:
-                    abort()
-            run("hg update")
+                    abort("'hg push' failed.")
+            run("hg update -C")
 
 
 def db_pass():
@@ -309,62 +355,57 @@ def db_pass():
 
 
 @task
-def apt(packages):
+def pip(packages, show=True):
     """
-    Installs one or more system packages via apt.
+    Install Python packages within the virtual environment.
     """
-    return sudo("apt-get install -y -q " + packages)
-
-
-@task
-def pip(packages):
-    """
-    Installs one or more Python packages within the virtual environment.
-    """
+    # We use our own tmp folder to avoid problems with the system /tmp.
+    pip_tmp = "/home/%s/tmp/pip" % env.user
+    if not exists(pip_tmp):
+        run("mkdir -p %s" % pip_tmp)
     with virtualenv():
-        return run("pip install %s" % packages)
-
-
-def postgres(command):
-    """
-    Runs the given command as the postgres user.
-    """
-    show = not command.startswith("psql")
-    return sudo(command, show=show, user="postgres")
-
-
-@task
-def psql(sql, show=True):
-    """
-    Runs SQL against the project's database.
-    """
-    out = postgres('psql -c "%s"' % sql)
-    if show:
-        print_command(sql)
-    return out
+        run("pip install -b %s %s" % (pip_tmp, packages), show=show)
+        run("rm -rf %s/*" % pip_tmp, show=show)  # Cleanup
 
 
 @task
 def backup(filename):
     """
-    Backs up the project database.
+    Backs up the remote (production) database.
     """
-    tmp_file = "/tmp/%s" % filename
-    # We dump to /tmp because user "postgres" can't write to other user folders
-    # We cd to / because user "postgres" might not have read permissions
-    # elsewhere.
-    with cd("/"):
-        postgres("pg_dump -Fc %s > %s" % (env.proj_name, tmp_file))
-    run("cp %s ." % tmp_file)
-    sudo("rm -f %s" % tmp_file)
+    print(blue("Input the remote database password when prompted", bold=True))
+    return run("pg_dump -U %s -Fc %s > %s" % (
+        env.proj_name, env.proj_name, filename))
+
+
+@task
+def local_backup(filename):
+    """
+    Backs up the local (development) database.
+    """
+    print(blue("Input the local database password when prompted", bold=True))
+    return local("pg_dump -U %s -Fc %s -h localhost > %s" % (
+        env.proj_name, env.proj_name, filename))
 
 
 @task
 def restore(filename):
     """
-    Restores the project database from a previous backup.
+    Restores the remote (production) database from a previous backup.
     """
-    return postgres("pg_restore -c -d %s %s" % (env.proj_name, filename))
+    print(blue("Input the remote database password when prompted", bold=True))
+    return run("pg_restore -U %s -c -d %s %s" % (
+        env.proj_name, env.proj_name, filename))
+
+
+@task
+def local_restore(filename):
+    """
+    Restores the local (development) database from a previous backup.
+    """
+    print(blue("Input the local database password when prompted", bold=True))
+    return local("pg_restore -U %s -c -d %s -h localhost %s" % (
+        env.proj_name, env.proj_name, filename))
 
 
 @task
@@ -400,29 +441,6 @@ def manage(command):
     return run("%s %s" % (env.manage, command))
 
 
-###########################
-# Security best practices #
-###########################
-
-@task
-@log_call
-@hosts(["root@%s" % host for host in env.hosts])
-def secure(new_user=env.user):
-    """
-    Minimal security steps for brand new servers.
-    Installs system updates, creates new user (with sudo privileges) for future
-    usage, and disables root login via SSH.
-    """
-    run("apt-get update -q")
-    run("apt-get upgrade -y -q")
-    run("adduser --gecos '' %s" % new_user)
-    run("usermod -G sudo %s" % new_user)
-    run("sed -i 's:RootLogin yes:RootLogin no:' /etc/ssh/sshd_config")
-    run("service ssh restart")
-    print(green("Security steps completed. Log in to the server as '%s' from "
-                "now on." % new_user, bold=True))
-
-
 #########################
 # Install and configure #
 #########################
@@ -431,23 +449,36 @@ def secure(new_user=env.user):
 @log_call
 def install():
     """
-    Installs the base system and Python requirements for the entire server.
+    Installs all prerequistes in a Webfaction server.
+    This task should only be run once per server. All new projects deployed with this
+    fabfile don't need to run it again.
     """
-    # Install system requirements
-    sudo("apt-get update -y -q")
-    apt("nginx libjpeg-dev python-dev python-setuptools git-core "
-        "postgresql libpq-dev memcached supervisor python-pip")
-    run("mkdir -p /home/%s/logs" % env.user)
+    # Install git
+    srv, ssn, acn = get_webf_session()
+    srv.create_app(ssn, "git_app", "git_230", False, env.password)
 
     # Install Python requirements
-    sudo("pip install -U pip virtualenv virtualenvwrapper mercurial")
+    run("easy_install-2.7 pip")
+    run("pip install -U pip virtualenv virtualenvwrapper supervisor mercurial")
 
-    # Set up virtualenv
+    # Set up supervisor
+    conf_path = "/home/%s/etc" % env.user
+    run("mkdir -p %s/supervisor/conf.d" % conf_path)
+    conf_path += "/supervisord.conf"
+    upload_template("deploy/supervisord.conf.template", conf_path, env, backup=False)
+    run("mkdir -p /home/%s/tmp" % env.user)
+    run("supervisord -c %s" % conf_path)
+
+    # Set up virtualenv and virtualenvwrapper
     run("mkdir -p %s" % env.venv_home)
-    run("echo 'export WORKON_HOME=%s' >> /home/%s/.bashrc" % (env.venv_home,
-                                                              env.user))
-    run("echo 'source /usr/local/bin/virtualenvwrapper.sh' >> "
-        "/home/%s/.bashrc" % env.user)
+    bashrc = "/home/%s/.bashrc" % env.user
+    run("echo 'export WORKON_HOME=%s' >> %s" % (env.venv_home, bashrc))
+    run("echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python2.7' >> %s" % bashrc)
+    run("echo 'source $HOME/bin/virtualenvwrapper.sh' >> %s" % bashrc)
+
+    # Set up memcached (with 50 MB of RAM)
+    run("memcached -d -m 50 -s $HOME/memcached.sock -P $HOME/memcached.pid")
+
     print(green("Successfully set up git, mercurial, pip, virtualenv, "
                 "supervisor, memcached.", bold=True))
 
@@ -457,22 +488,10 @@ def install():
 def create():
     """
     Creates the environment needed to host the project.
-    The environment consists of: system locales, virtualenv, database, project
-    files, SSL certificate, and project-specific Python requirements.
+    The environment consists of: virtualenv, database, project
+    files, project-specific Python requirements, and Webfaction API objects.
     """
-    # Generate project locale
-    locale = env.locale.replace("UTF-8", "utf8")
-    with hide("stdout"):
-        if locale not in run("locale -a"):
-            sudo("locale-gen %s" % env.locale)
-            sudo("update-locale %s" % env.locale)
-            sudo("service postgresql restart")
-            run("exit")
-
-    # Create project path
-    run("mkdir -p %s" % env.proj_path)
-
-    # Set up virtual env
+    # Set up virtualenv
     run("mkdir -p %s" % env.venv_home)
     with cd(env.venv_home):
         if exists(env.proj_name):
@@ -482,60 +501,76 @@ def create():
             else:
                 abort()
         run("virtualenv %s" % env.proj_name)
+        # Make sure we don't inherit anything from the system's Python
+        run("touch %s/lib/python2.7/sitecustomize.py" % env.proj_name)
+
+    # Create elements with the Webfaction API
+    _print(blue("Creating database and website records in the Webfaction "
+                "control panel...", bold=True))
+    srv, ssn, acn = get_webf_session()
+
+    # Database
+    db_user = get_webf_obj(srv, ssn, "db_user", env.proj_name)
+    if db_user:
+        abort("Database user %s already exists." % db_user["username"])
+    db = get_webf_obj(srv, ssn, "db", env.proj_name)
+    if db:
+        abort("Databse %s already exists." % db["name"])
+    if env.db_pass is None:
+        env.db_pass = db_pass()
+    srv.create_db(ssn, env.proj_name, "postgresql", env.db_pass)
+
+    # Custom app
+    app = get_webf_obj(srv, ssn, "app", env.proj_name)
+    if app:
+        abort("App %s already exists." % app["name"])
+    app = srv.create_app(ssn, env.proj_name, "custom_app_with_port", True, "")
+
+    # Static app
+    static_app = get_webf_obj(srv, ssn, "app", "%s_static" % env.proj_name)
+    if static_app:
+        abort("Static app %s already exists." % static_app["name"])
+    static_app_name = "%s_static" % env.proj_name
+    static_dir = "%s/static" % env.proj_path
+    srv.create_app(ssn, static_app_name, "symlink54", False, static_dir)
+
+    # Domain and subdomain
+    dom = get_webf_obj(srv, ssn, "domain", env.live_domain, env.live_subdomain)
+    if dom:
+        abort("Domain %s already exists." % env.live_host)
+    srv.create_domain(ssn, env.live_domain, env.live_subdomain)
+
+    # Site record
+    site = get_webf_obj(srv, ssn, "website", env.proj_name)
+    if site:
+        abort("Website: %s already exists." % site["name"])
+    main_app, static_app = [env.proj_name, "/"], [static_app_name, "/static"]
+    site = srv.create_website(ssn, env.proj_name, env.host_string, False,
+                              [env.live_host], main_app, static_app)
 
     # Upload project files
+    _print(blue("Uploading project files...", bold=True))
     if env.deploy_tool in env.vcs_tools:
         vcs_upload()
     else:
         rsync_upload()
 
-    # Create DB and DB user
-    pw = db_pass()
-    user_sql_args = (env.proj_name, pw.replace("'", "\'"))
-    user_sql = "CREATE USER %s WITH ENCRYPTED PASSWORD '%s';" % user_sql_args
-    psql(user_sql, show=False)
-    shadowed = "*" * len(pw)
-    print_command(user_sql.replace("'%s'" % pw, "'%s'" % shadowed))
-    psql("CREATE DATABASE %s WITH OWNER %s ENCODING = 'UTF8' "
-         "LC_CTYPE = '%s' LC_COLLATE = '%s' TEMPLATE template0;" %
-         (env.proj_name, env.proj_name, env.locale, env.locale))
-
-    # Set up SSL certificate
-    if not env.ssl_disabled:
-        conf_path = "/etc/nginx/conf"
-        if not exists(conf_path):
-            sudo("mkdir %s" % conf_path)
-        with cd(conf_path):
-            crt_file = env.proj_name + ".crt"
-            key_file = env.proj_name + ".key"
-            if not exists(crt_file) and not exists(key_file):
-                try:
-                    crt_local, = glob(join("deploy", "*.crt"))
-                    key_local, = glob(join("deploy", "*.key"))
-                except ValueError:
-                    parts = (crt_file, key_file, env.domains[0])
-                    sudo("openssl req -new -x509 -nodes -out %s -keyout %s "
-                         "-subj '/CN=%s' -days 3650" % parts)
-                else:
-                    upload_template(crt_local, crt_file, use_sudo=True)
-                    upload_template(key_local, key_file, use_sudo=True)
-
     # Install project-specific requirements
+    _print(blue("Installing project requirements...", bold=True))
     upload_template_and_reload("settings")
     with project():
         if env.reqs_path:
-            pip("-r %s/%s" % (env.proj_path, env.reqs_path))
+            pip("-r %s/%s" % (env.proj_path, env.reqs_path), show=False)
         pip("gunicorn setproctitle psycopg2 "
-            "django-compressor python-memcached")
+            "django-compressor python-memcached", show=False)
     # Bootstrap the DB
+        _print(blue("Initializing the database...", bold=True))
         manage("createdb --noinput --nodata")
         python("from django.conf import settings;"
                "from django.contrib.sites.models import Site;"
-               "Site.objects.filter(id=settings.SITE_ID).update(domain='%s');"
-               % env.domains[0])
-        for domain in env.domains:
-            python("from django.contrib.sites.models import Site;"
-                   "Site.objects.get_or_create(domain='%s');" % domain)
+               "site, _ = Site.objects.get_or_create(id=settings.SITE_ID);"
+               "site.domain = '" + env.live_host + "';"
+               "site.save();")
         if env.admin_pass:
             pw = env.admin_pass
             user_py = ("from django.contrib.auth import get_user_model;"
@@ -557,19 +592,44 @@ def remove():
     """
     Blow away the current project.
     """
+    # Delete Webfaction API objects
+    _print(blue("Removing database and website records from the Webfaction "
+                "control panel...", bold=True))
+    srv, ssn, acn = get_webf_session()
+    website = get_webf_obj(srv, ssn, "website", env.proj_name)
+    if website:
+        del_webf_obj(srv, ssn, "website", env.proj_name, env.host_string)
+    domain = get_webf_obj(srv, ssn, "domain", env.live_domain, env.live_subdomain)
+    if domain:
+        del_webf_obj(srv, ssn, "domain", env.live_domain, env.live_subdomain)
+    main_app = get_webf_obj(srv, ssn, "app", env.proj_name)
+    if main_app:
+        del_webf_obj(srv, ssn, "app", main_app["name"])
+    static_app = get_webf_obj(srv, ssn, "app", "%s_static" % env.proj_name)
+    if static_app:
+        del_webf_obj(srv, ssn, "app", "%s_static" % env.proj_name)
+    db = get_webf_obj(srv, ssn, "db", env.proj_name)
+    if db:
+        del_webf_obj(srv, ssn, "db", env.proj_name, "postgresql")
+    db_user = get_webf_obj(srv, ssn, "db_user", env.proj_name)
+    if db_user:
+        del_webf_obj(srv, ssn, "db_user", env.proj_name, "postgresql")
+    if isinstance(env.twitter_period, int):
+        srv.delete_cronjob(ssn, "*/%s * * * * %s poll_twitter" % (
+            env.twitter_period, env.manage))
+
+    # Delete files/folders
     if exists(env.venv_path):
         run("rm -rf %s" % env.venv_path)
-    if exists(env.proj_path):
-        run("rm -rf %s" % env.proj_path)
+    if exists(env.repo_path):
+        run("rm -rf %s" % env.repo_path)
     for template in get_templates().values():
         remote_path = template["remote_path"]
         if exists(remote_path):
-            sudo("rm %s" % remote_path)
-    if exists(env.repo_path):
-        run("rm -rf %s" % env.repo_path)
-    sudo("supervisorctl update")
-    psql("DROP DATABASE IF EXISTS %s;" % env.proj_name)
-    psql("DROP USER IF EXISTS %s;" % env.proj_name)
+            run("rm %s" % remote_path)
+
+    # Update supervisor
+    run("supervisorctl update")
 
 
 ##############
@@ -585,9 +645,9 @@ def restart():
     """
     pid_path = "%s/gunicorn.pid" % env.proj_path
     if exists(pid_path):
-        run("kill -HUP `cat %s`" % pid_path)
+        run("supervisorctl restart gunicorn_%s" % env.proj_name)
     else:
-        sudo("supervisorctl update")
+        run("supervisorctl update")
 
 
 @task
@@ -608,6 +668,7 @@ def deploy():
             abort()
 
     # Backup current version of the project
+    _print(blue("Backing up static files and database...", bold=True))
     with cd(env.proj_path):
         backup("last.db")
     if env.deploy_tool in env.vcs_tools:
@@ -627,16 +688,30 @@ def deploy():
             exclude_arg = " ".join("--exclude='%s'" % e for e in excludes)
             run("tar -cf {0}.tar {1} {0}".format(env.proj_name, exclude_arg))
 
-    # Deploy latest version of the project
+    # Update requirements and migrate the DB
+    _print(blue("Deploying the latest version of the project...", bold=True))
     with update_changed_requirements():
         if env.deploy_tool in env.vcs_tools:
             vcs_upload()
         else:
             rsync_upload()
-    with project():
-        manage("collectstatic -v 0 --noinput")
-        manage("syncdb --noinput")
-        manage("migrate --noinput")
+    manage("migrate --noinput")
+
+    # Upload and collect compiled static resources
+    run("mkdir -p %s" % static())  # Create the STATIC_ROOT
+    remote_path = static() + "/.htaccess"
+    upload_template("deploy/htaccess", remote_path, backup=False)
+    excludes = ["*~", "*.old", "*.map"]
+    local_dir = os.path.join(os.getcwd(), "theme", "static", "build")
+    remote_dir = os.path.join(env.proj_path, "theme", "static")
+    rsync_project(remote_dir=remote_dir, local_dir=local_dir, exclude=excludes)
+    manage("collectstatic -v 0 --noinput")
+
+    # Upload templated config files
+    _print(blue("Uploading configuration files...", bold=True))
+    srv, ssn, acn = get_webf_session()
+    app = get_webf_obj(srv, ssn, "app", env.proj_name)
+    env.gunicorn_port = app["port"]
     for name in get_templates():
         upload_template_and_reload(name)
     restart()
@@ -683,3 +758,94 @@ def all():
     install()
     if create():
         deploy()
+
+
+###############
+# Maintenance #
+###############
+
+@task
+@log_call
+def pulldb():
+    """
+    Backup the remote database, download it, and restore it locally.
+    """
+    prompt = ("This will delete your development database and copy the contents from "
+              "the production database. Continue?")
+    if not confirm(prompt, default=False):
+        abort("Aborting by user request.")
+    backup("%s_production.sql" % env.proj_name)
+    local("scp {0}@{1}:/home/{0}/{2}_production.sql .".format(
+        env.user, env.host_string, env.proj_name))
+    with fab_settings(warn_only=True):
+        # This last part can output some errors, but the restoration goes well
+        local_restore("%s_production.sql" % env.proj_name)
+
+
+@task
+@log_call
+def pushdb():
+    """
+    Backup the local database, upload it, and restore it remotely.
+    """
+    prompt = ("This will delete your production database and copy the contents from "
+              "the development database. Continue?")
+    if not confirm(prompt, default=False):
+        abort("Aborting by user request.")
+    local_backup("%s_development.sql" % env.proj_name)
+    local("scp {2}_development.sql {0}@{1}:/home/{0}/".format(
+        env.user, env.host_string, env.proj_name))
+    with fab_settings(warn_only=True):
+        # This last part can output some errors, but the restoration goes well
+        restore("%s_development.sql" % env.proj_name)
+
+
+@task
+@log_call
+def pullmedia():
+    """
+    Downlaod the remote media files into the local MEDIA_ROOT.
+    """
+    cpmedia(upload=False)
+
+
+@task
+@log_call
+def pushmedia():
+    """
+    Upload the local media files into the remote MEDIA_ROOT.
+    """
+    cpmedia(upload=True)
+
+
+@task
+@log_call
+def setup_email():
+    """
+    Setup a mailbox to send out error emails to ADMINS.
+    """
+    if env.use_email == "#":
+        abort("Please define email settings in the FABRIC dictionary first.")
+    _print(blue("Setting up a Webfaction mailbox.", bold=True))
+    srv, ssn, acn = get_webf_session()
+    srv.create_mailbox(ssn, env.email_user)
+    srv.change_mailbox_password(ssn, env.email_user, env.email_pass)
+    srv.create_email(ssn, env.default_email, env.email_user)
+
+
+@task
+@log_call
+def setup_twitter():
+    """
+    Setup a cron job to poll Twitter periodically.
+    """
+    if isinstance(env.twitter_period, int):
+        srv, ssn, acn = get_webf_session()
+        srv.create_cronjob(ssn, "*/%s * * * * %s poll_twitter" % (
+            env.twitter_period, env.manage))
+        manage("poll_twitter")
+        print("New cronjob. Twitter will be polled every %s minutes. "
+              "Please make sure you have configured your Twitter credentials "
+              "in your site settings." % env.twitter_period)
+    else:
+        abort("TWITTER_PERIOD not set correctly in deployment settings.")
