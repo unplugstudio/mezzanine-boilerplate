@@ -295,6 +295,8 @@ OPTIONAL_APPS = (
 # Path to the Gruntfile
 GRUNT_PATH = os.path.join(PROJECT_ROOT, "theme", "static", "Gruntfile.js")
 
+FORMS_USE_HTML5 = True
+
 ##################
 # LOCAL SETTINGS #
 ##################
