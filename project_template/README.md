@@ -1,5 +1,5 @@
 # {{ project_name }}
 
-A Mezzanine project based on [mezzanine-guidelines].
+A Mezzanine project based on [mezzanine-boilerplate].
 
-[mezzanine-guidelines]: https://gitlab.com/jerivas/django-mezzanine-guidelines/blob/v1.1.0/README.md
+[mezzanine-boilerplate]: https://gitlab.com/jerivas/mezzanine-boilerplate/blob/v1.2.0/README.md
