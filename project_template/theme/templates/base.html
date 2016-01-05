@@ -1,4 +1,4 @@
-{% load pages_tags mezzanine_tags theme_tags staticfiles %}
+{% load pages_tags mezzanine_tags mezzy_tags staticfiles %}
 {% load_theme as theme %}
 
 <!DOCTYPE html>
@@ -50,7 +50,7 @@
 {# Footer #}
 	<footer id="footer">
 		<div class="container">
-			{{ theme.footer_content|richtext_filters|safe }}
+			{{ theme.footer_content|richtext_filters|microtemplate|safe }}
 		</div>
 	</footer>
 
