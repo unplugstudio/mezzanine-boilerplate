@@ -5,7 +5,7 @@
 		color: _palette(fg);
 	}
 
-	body, input, select, textarea, button {
+	html, body, input, select, textarea, button {
 		font-family: _font(family);
 		font-size: 11pt;
 		font-weight: _font(weight);
@@ -52,7 +52,8 @@
 		margin: 0 0 _size(element-margin) 0;
 	}
 
-	h1, h2, h3, h4, h5, h6 {
+	h1, h2, h3, h4, h5, h6,
+	.h1, .h2, .h3, .h4, .h5, .h6 {
 		color: _palette(fg-bold);
 		line-height: 1.5;
 		margin: 0 0 (_size(element-margin) * 0.25) 0;
@@ -69,28 +70,28 @@
 		}
 	}
 
-	h2 {
-		font-size: 2em;
+	h2, .h2 {
+		font-size: 2rem;
 
 		small {
 			font-size: 0.5em;
 		}
 	}
 
-	h3 {
-		font-size: 1.35em;
+	h3, .h3 {
+		font-size: 1.35rem;
 	}
 
-	h4 {
-		font-size: 1.1em;
+	h4, .h4 {
+		font-size: 1.1rem;
 	}
 
-	h5 {
-		font-size: 0.9em;
+	h5, .h5 {
+		font-size: 0.9rem;
 	}
 
-	h6 {
-		font-size: 0.7em;
+	h6, .h6 {
+		font-size: 0.7rem;
 	}
 
 	sub {
