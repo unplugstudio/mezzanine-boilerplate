@@ -1,5 +1,5 @@
 Mezzanine==4.0.1
--e git+https://gitlab.com/tigris-webdev/mezzy.git@v1.0.0#egg=mezzy
+-e git+https://gitlab.com/tigris-webdev/mezzy.git#egg=mezzy
 django-debug-toolbar
 fabric
 psycopg2
