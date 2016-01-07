@@ -44,6 +44,6 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 %(use_email)sEMAIL_USE_TLS = True
 %(use_email)sEMAIL_PORT = 587
 
-ADMINS = (
-    ("Eduardo Rivas", "e@jerivas.com"),
-)
+# ADMINS = (
+#     ("Name", "mail@example.com"),
+# )
