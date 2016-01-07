@@ -9,14 +9,11 @@
 		border: solid _size(border-width) _palette(border);
 		border-radius: _size(border-radius);
 		color: inherit;
-		display: inline-block;
-		height: _size(element-height);
-		line-height: _size(element-height);
-		padding: 0;
+		display: block;
+		padding: 0.5em 0;
 		text-align: center;
 		text-decoration: none;
 		transition: background-color _duration(medium), color _duration(medium);
-		white-space: nowrap;
 
 		&:after {
 			margin-left: 0.35em;
@@ -57,14 +54,17 @@
 			opacity: 0.25;
 		}
 
+		@include mq($from: sm) {
+			display: inline-block;
+			padding-left: 2em;
+			padding-right: 2em;
+		}
+
 		// Create all color variations
 		@each $i in map-keys(_palette(highlight)) {
 			&.style-#{$i} {
 				background-color: _palette(highlight, $i);
 				color: #fff;
-				font-weight: _font(weight-bold);
-				text-decoration: none;
-				text-transform: uppercase;
 
 				&:hover {
 					background-color: lighten(_palette(highlight, $i), 5);
@@ -72,14 +72,6 @@
 
 				&:active {
 					background-color: darken(_palette(highlight, $i), 5);
-				}
-
-				@include mq($from: sm) {
-					padding: 0 0.25em 0 0.75em;
-
-					&.no-icon {
-						padding: 0 1.5em;
-					}
 				}
 			}
 		}
