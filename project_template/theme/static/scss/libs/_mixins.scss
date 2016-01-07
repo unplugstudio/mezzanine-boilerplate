@@ -1,9 +1,10 @@
-/// Makes an element's :before pseudoelement a FontAwesome icon.
+/// Makes an element's pseudoelement a FontAwesome icon.
 /// @param {string} $content Optional content value to use.
-@mixin icon($content: false) {
+/// @param {string} $element Optional use the before or after pseudoelement.
+@mixin icon($content: false, $element: before) {
 	text-decoration: none;
 
-	&:before {
+	&:#{$element} {
 
 		@if $content {
 			content: $content;
