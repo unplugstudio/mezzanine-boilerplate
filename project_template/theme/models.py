@@ -4,8 +4,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
 from mezzanine.core.fields import FileField
-from mezzanine.core.models import RichText, Orderable, SiteRelated
-from mezzanine.pages.models import Page
+from mezzanine.core.models import SiteRelated
 
 
 ####################

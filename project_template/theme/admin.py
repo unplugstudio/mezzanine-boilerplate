@@ -3,10 +3,10 @@ from copy import deepcopy
 
 from django.contrib import admin
 
-from mezzanine.core.admin import (StackedDynamicInlineAdmin, SingletonAdmin,
-                                  TabularDynamicInlineAdmin)
+from mezzanine.core.admin import StackedDynamicInlineAdmin, TabularDynamicInlineAdmin
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.pages.models import RichTextPage
+from mezzanine.utils.admin import SingletonAdmin
 
 from .models import SiteConfiguration
 
@@ -20,7 +20,6 @@ from .models import SiteConfiguration
 
 
 # Site Configuration
+@admin.register(SiteConfiguration)
 class SiteConfigurationAdmin(SingletonAdmin):
     pass
-
-admin.site.register(SiteConfiguration, SiteConfigurationAdmin)
