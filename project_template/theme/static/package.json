@@ -9,14 +9,26 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "autoprefixer": "*",
     "eslint": "*",
-    "eslint-config-airbnb": "*",
+    "eslint-config-airbnb-base": "*",
+    "eslint-plugin-import": "*",
     "grunt": "*",
-    "grunt-autoprefixer": "*",
     "grunt-contrib-concat": "*",
     "grunt-contrib-watch": "*",
+    "grunt-postcss": "*",
     "grunt-sass": "*",
     "node-reset-scss": "*",
     "sass-mq": "*"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base/legacy",
+    "rules": {
+      "indent": [
+        "error",
+        "tab"
+      ],
+      "no-tabs": "off"
+    }
   }
 }
