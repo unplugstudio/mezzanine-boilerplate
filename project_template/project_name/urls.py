@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
+from django.views.generic import TemplateView
 from django.views.i18n import set_language
 
 from mezzanine.pages.views import page
@@ -65,6 +66,8 @@ urlpatterns += [
     # NOTE: Don't forget to import the view function too!
 
     # url("^$", mezzanine.blog.views.blog_post_list, name="home"),
+
+    url("^ui-elements$", TemplateView.as_view(template_name="ui_elements.html")),
 
     # MEZZANINE'S URLS
     # ----------------
