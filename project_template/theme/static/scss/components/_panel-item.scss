@@ -1,0 +1,40 @@
+.panel-item {
+	@include padding(_size(element-margin), _size(element-margin));
+
+	background-color: _palette(bg);
+	border: solid _size(border-width) _palette(border);
+	margin-bottom: _size(element-margin);
+
+	&.-alt {
+		background-color: _palette(bg-alt);
+		border: none;
+	}
+
+	> .image-wraper { /* stylelint-disable-line */
+		margin-bottom: _size(element-margin);
+
+		> img {
+			width: 100%;
+		}
+
+		&.-cover {
+			margin-left: -(_size(element-margin));
+			margin-right: -(_size(element-margin));
+			margin-top: -(_size(element-margin));
+		}
+	}
+
+	// Generate all color variations
+	@each $i in map-keys(_palette(highlight)) {
+		&.-style-#{$i} { /* stylelint-disable-line */
+			background-color: _palette(highlight, $i);
+			border: none;
+			color: #fff;
+
+			h2, h3, h4, h5, h6, a { /* stylelint-disable-line */
+				border-color: currentColor;
+				color: inherit;
+			}
+		}
+	}
+}

@@ -1,75 +1,65 @@
-// General
-	$url-prefix: '../'; // Prefix to all things included via url() (images, fonts, etc)
+// All these variables are available in all other stylesheets.
+// See libs/_functions.scss for handy accessors for these maps.
 
-// Misc
-	$misc: (
-		z-index-base:		10000,
-		columns:			12
-	);
+$url-prefix: "../"; // Prefix to all things included via url() (images, fonts, etc)
 
-// Duration
-	$duration: (
-		fast:				0.1s,
-		medium:				0.2s,
-		slow:				0.5s
-	);
+$mq-breakpoints: (
+	xs:					0px,
+	sm:					544px,
+	md:					768px,
+	lg:					992px,
+	xl:					1200px
+);
 
-// Size
-	$size: (
-		border-radius:		4px,
-		border-width:		1px,
-		element-height:		2.5em,
-		element-margin:		2rem,
-		container: (
-			xs:				95%,
-			sm:				95%,
-			md:				95%,
-			lg:				95%,
-			xl:				1200px
-		),
-		gutter: (
-			slim:			0rem,
-			normal:			2rem,
-			wide:			4rem
-		)
-	);
+$misc: (
+	z-index-base:		10000,
+	columns:			12
+);
 
-// Font
-	$font: (
-		family:				(Arial, Helvetica, sans-serif),
-		family-fixed:		('Courier New', monospace),
-		family-heading:		(Arial, Helvetica, sans-serif),
-		weight:				normal,
-		weight-bold:		bold
-	);
+$duration: (
+	fast:				0.1s,
+	medium:				0.2s,
+	slow:				0.5s
+);
 
-// Breakpoints
-	$mq-breakpoints: (
-		xs:					0px,
-		sm:					544px,
-		md:					768px,
-		lg:					992px,
-		xl:					1200px
-	);
+$size: (
+	border-radius:		4px,
+	border-width:		1px,
+	element-height:		2.5em,
+	element-margin:		2rem,
+	container:			1200px,
+	gutter: (
+		slim:			0rem,
+		normal:			2rem,
+		wide:			4rem
+	)
+);
 
-// Palette
-	$palette: (
-		bg:					#fff,
-		bg-alt:				#eaeaea,
-		fg:					#444,
-		fg-bold:			#222,
-		fg-light:			#999,
-		border:				rgba(144,144,144,0.25),
-		border-bg:			rgba(144,144,144,0.1),
-		border2:			rgba(144,144,144,0.5),
-		border2-bg:			rgba(144,144,144,0.2),
-		state: (
-			success:		#5cb85c,
-			info:			#5bc0de,
-			warning:		#f0ad4e,
-			error:			#d9534f
-		),
-		highlight: (
-			1:				#3d97ba
-		)
-	);
+$font: (
+	family:				(Arial, Helvetica, sans-serif),
+	family-fixed:		("Courier New", monospace),
+	family-heading:		(Arial, Helvetica, sans-serif),
+	weight:				normal,
+	weight-bold:		bold
+);
+
+$palette: (
+	bg:					#fff,
+	bg-alt:				#eaeaea,
+	fg:					#444,
+	fg-bold:			#222,
+	fg-light:			#999,
+	border:				rgba(144, 144, 144, 0.25),
+	border-bg:			rgba(144, 144, 144, 0.1),
+	border2:			rgba(144, 144, 144, 0.5),
+	border2-bg:			rgba(144, 144, 144, 0.2),
+	state: (
+		success:		#5cb85c,
+		info:			#5bc0de,
+		warning:		#f0ad4e,
+		error:			#d9534f
+	),
+	highlight: (
+		1:				var(--highlight-1, #3d97ba)
+	)
+);

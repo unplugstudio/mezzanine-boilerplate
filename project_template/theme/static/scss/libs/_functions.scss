@@ -10,7 +10,7 @@
 	@each $key in $keys {
 
 		// If current $map is not a map, assume we finished and return
-		@if type-of($map) != 'map' {
+		@if type-of($map) != "map" {
 			@return $map;
 		}
 
@@ -18,8 +18,8 @@
 		$map: map-get($map, $key);
 
 		// If the new $map is null, maybe the $key is mispelled or missing
-		@if type-of($map) == 'null' {
-			@warn 'Nested key "#{$keys}" returned null. Does it exist?';
+		@if type-of($map) == "null" {
+			@warn "Nested key "#{$keys}" returned null. Does it exist?";
 		}
 	}
 

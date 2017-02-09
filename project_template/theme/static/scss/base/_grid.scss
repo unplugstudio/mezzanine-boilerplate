@@ -1,0 +1,34 @@
+/* stylelint-disable rscss/class-format */
+
+/* Disable RSCSS checks to comply with Bootstrap's conventions */
+
+.container {
+	@include grid-container;
+}
+
+.row {
+	@include grid-row;
+}
+
+.container-row {
+	@include grid-container-row;
+}
+
+// Basic styles that all columns should have on all viewports.
+// Created as an extendable to group into a single selector.
+%base-col {
+	@include grid-col-gutter;
+}
+
+// Make all columns in all viewports
+@each $breakpoint in map-keys($mq-breakpoints) {
+	@for $i from 1 through _misc(columns) {
+		.col-#{$breakpoint}-#{$i} {
+			@extend %base-col;
+
+			@include mq($from: $breakpoint) {
+				@include grid-col-width($i);
+			}
+		}
+	}
+}

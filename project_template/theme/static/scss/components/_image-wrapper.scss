@@ -1,0 +1,25 @@
+.image-wrapper {
+	line-height: 0; // Prevent extra-height
+	margin-bottom: _size(element-margin);
+
+	&.-fit {
+		display: block;
+		width: 100%;
+
+		> img {
+			width: 100%;
+		}
+	}
+
+	&.-left {
+		float: left;
+		margin-right: _size(element-margin);
+		max-width: 40%;
+	}
+
+	&.-right {
+		float: right;
+		margin-left: _size(element-margin);
+		max-width: 40%;
+	}
+}

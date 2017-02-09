@@ -5,14 +5,13 @@
 	text-decoration: none;
 
 	&:#{$element} {
-
 		@if $content {
 			content: $content;
 		}
 
+		font-family: FontAwesome;
 		-moz-osx-font-smoothing: grayscale;
 		-webkit-font-smoothing: antialiased;
-		font-family: FontAwesome;
 		font-style: normal;
 		font-weight: normal;
 		text-transform: none !important;
@@ -23,6 +22,6 @@
 /// @param {mixed} $tb Top/bottom padding.
 /// @param {mixed} $lr Left/right padding.
 /// @param {list} $pad Optional extra padding (in the following order top, right, bottom, left)
-@mixin padding($tb, $lr, $pad: (0,0,0,0)) {
-	padding: ($tb + nth($pad,1)) ($lr + nth($pad,2)) max(0.1rem, $tb - _size(element-margin) + nth($pad,3)) ($lr + nth($pad,4));
+@mixin padding($tb, $lr, $pad: (0, 0, 0, 0)) {
+	padding: ($tb + nth($pad, 1)) ($lr + nth($pad, 2)) max(0.1rem, $tb - _size(element-margin) + nth($pad, 3)) ($lr + nth($pad, 4));
 }

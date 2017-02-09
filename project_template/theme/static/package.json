@@ -4,20 +4,28 @@
   "description": "Static files for the {{ project_name }} Mezzanine website",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint:js": "eslint js/**",
+    "lint:css": "stylelint scss/**/*.scss",
+    "lint": "npm run lint:js & npm run lint:css"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "autoprefixer": "*",
     "eslint": "*",
     "eslint-config-airbnb-base": "*",
-    "eslint-plugin-import": "*",
     "grunt": "*",
     "grunt-contrib-concat": "*",
     "grunt-contrib-watch": "*",
     "grunt-postcss": "*",
     "grunt-sass": "*",
+    "postcss": "*",
+    "stylelint": "*",
+    "stylelint-config-standard": "*",
+    "stylelint-order": "*",
+    "stylelint-rscss": "*"
+  },
+  "dependencies": {
     "node-reset-scss": "*",
     "sass-mq": "*"
   },
@@ -29,6 +37,26 @@
         "tab"
       ],
       "no-tabs": "off"
+    }
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-rscss/config"
+    ],
+    "plugins": [
+      "stylelint-order"
+    ],
+    "rules": {
+      "at-rule-no-vendor-prefix": true,
+      "indentation": "tab",
+      "media-feature-name-no-vendor-prefix": true,
+      "order/declaration-block-properties-alphabetical-order": true,
+      "property-no-vendor-prefix": true,
+      "selector-attribute-quotes": "always",
+      "selector-no-vendor-prefix": true,
+      "string-quotes": "double",
+      "value-no-vendor-prefix": true
     }
   }
 }
