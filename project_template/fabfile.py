@@ -701,6 +701,9 @@ def deploy():
             rsync_upload()
     manage("migrate --noinput")
 
+    # Create production-ready resources in theme/static/build
+    local("cd theme/static && npm run build")
+
     # Upload and collect compiled static resources
     run("mkdir -p %s" % static())  # Create the STATIC_ROOT
     remote_path = static() + "/.htaccess"

@@ -26,6 +26,32 @@ ul {
 		}
 	}
 
+	&.inline-icons {
+		font-size: 1.6rem;
+		list-style: none;
+		padding-left: 0;
+
+		&.big {
+			.icon {
+				text-decoration: none;
+
+				&::before {
+					font-size: 2rem;
+				}
+			}
+		}
+
+		> li {
+			display: inline-block;
+			margin-right: (_size(element-margin) * 0.5);
+			padding: 0;
+
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
+
 	&.actions {
 		cursor: default;
 		list-style: none;

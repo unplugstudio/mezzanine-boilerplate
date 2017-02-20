@@ -1,5 +1,4 @@
 /* stylelint-disable rscss/class-format */
-/* stylelint-disable rscss/no-descendant-combinator */
 /* stylelint-disable selector-list-comma-newline-after */
 
 /* Disable some stylelint rules because:
@@ -18,6 +17,20 @@
 	padding: 0;
 	position: absolute;
 	width: 1px;
+}
+
+// Same as .visually-hidden, but active only
+// when Font Awesome is ready
+.fa-events-icons-ready .fa-hidden {
+	@extend .visually-hidden;
+}
+
+.icon {
+	@include icon;
+}
+
+.text-caps {
+	text-transform: uppercase;
 }
 
 .text-ellipsis {
@@ -42,10 +55,47 @@
 	font-size: 0.8em;
 }
 
+.text-big {
+	font-size: 1.4em;
+}
+
+.text-muted {
+	color: _palette(fg-light);
+}
+
 // Colored text
 @each $i in map-keys(_palette(highlight)) {
 	.text-style-#{$i} {
 		color: _palette(highlight, $i);
+	}
+}
+
+/* Margins and paddings
+   Generates margin and padding classes in all directions based on _size(element-margin)
+   .mb-2 -> Double bottom margin
+   .pl-4 -> Quad left padding
+   .mt-half -> Half top margin
+ */
+
+$sizes: (
+	(half,	(_size(element-margin) * 0.5)),
+	(1,		(_size(element-margin) * 1)),
+	(2,		(_size(element-margin) * 2)),
+	(3,		(_size(element-margin) * 3)),
+	(4,		(_size(element-margin) * 4))
+);
+
+$directions: (
+	(b, bottom),
+	(l, left),
+	(r, right),
+	(t, top)
+);
+
+@each $size-key, $size in $sizes {
+	@each $dir-key, $dir in $directions {
+		.p#{$dir-key}-#{$size-key} { padding-#{$dir}: $size; }
+		.m#{$dir-key}-#{$size-key} { margin-#{$dir}: $size; }
 	}
 }
 

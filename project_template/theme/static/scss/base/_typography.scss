@@ -35,12 +35,22 @@ a {
 	color: _palette(highlight, 1);
 	cursor: pointer;
 	text-decoration: none;
-	transition: color _duration(medium), border-color _duration(medium);
+	transition: color _duration(medium);
 
 	&:active,
+	&:focus,
 	&:hover {
 		color: _palette(highlight, 1);
 		text-decoration: underline;
+	}
+
+	&.-no-color {
+		color: inherit;
+	}
+
+	&.-dotted {
+		text-decoration: underline;
+		text-decoration-style: dotted;
 	}
 }
 
@@ -59,7 +69,7 @@ p {
 	margin: 0 0 _size(element-margin) 0;
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { /* stylelint-disable-line */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { // stylelint-disable-line
 	color: _palette(fg-bold);
 	line-height: 1.5;
 	margin: 0 0 (_size(element-margin) * 0.25) 0;
@@ -83,10 +93,6 @@ h1,
 h2,
 .h2 {
 	font-size: 2rem;
-
-	> small {
-		font-size: 0.5em;
-	}
 }
 
 h3,
@@ -157,7 +163,7 @@ hr {
 	border-bottom: solid _size(border-width) _palette(border);
 	margin: _size(element-margin) 0;
 
-	&.major {
+	&.-major {
 		margin: (_size(element-margin) * 1.5) 0;
 	}
 }

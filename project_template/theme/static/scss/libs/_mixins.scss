@@ -16,6 +16,19 @@
 		font-weight: normal;
 		text-transform: none !important;
 	}
+
+	&:active,
+	&:focus,
+	&:hover {
+		&:#{$element} {
+			text-decoration: none;
+		}
+	}
+
+	// Don't show the icons until FontAwesome has loaded
+	.fa-events-icons-loading &:#{$element} {  // stylelint-disable-line
+		visibility: hidden;
+	}
 }
 
 /// Applies padding to an element, taking the current element-margin value into account.
@@ -24,4 +37,12 @@
 /// @param {list} $pad Optional extra padding (in the following order top, right, bottom, left)
 @mixin padding($tb, $lr, $pad: (0, 0, 0, 0)) {
 	padding: ($tb + nth($pad, 1)) ($lr + nth($pad, 2)) max(0.1rem, $tb - _size(element-margin) + nth($pad, 3)) ($lr + nth($pad, 4));
+}
+
+@mixin filter-lighten {
+	filter: brightness(115%) saturate(100%);
+}
+
+@mixin filter-darken {
+	filter: brightness(85%) saturate(125%);
 }

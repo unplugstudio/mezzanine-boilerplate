@@ -1,62 +1,50 @@
 {
   "name": "{{ project_name }}",
   "version": "1.0.0",
-  "description": "Static files for the {{ project_name }} Mezzanine website",
-  "main": "index.js",
+  "description": "Frontend files for the {{ project_name }} Mezzanine website",
+  "main": "webpack.config.babel.js",
   "scripts": {
-    "lint:js": "eslint js/**",
+    "clean": "rm -rf build",
+    "predev": "npm run clean",
+    "dev": "webpack --watch --progress --colors",
+    "prebuild": "npm run clean",
+    "build": "cross-env NODE_ENV=production webpack --progress --colors",
     "lint:css": "stylelint scss/**/*.scss",
+    "lint:js": "eslint js/**",
     "lint": "npm run lint:js & npm run lint:css"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "*",
+    "babel-core": "*",
+    "babel-eslint": "*",
+    "babel-loader": "*",
+    "babel-plugin-transform-class-properties": "*",
+    "babel-plugin-transform-object-rest-spread": "*",
+    "babel-preset-es2015": "*",
+    "cross-env": "*",
+    "css-loader": "*",
     "eslint": "*",
     "eslint-config-airbnb-base": "*",
-    "grunt": "*",
-    "grunt-contrib-concat": "*",
-    "grunt-contrib-watch": "*",
-    "grunt-postcss": "*",
-    "grunt-sass": "*",
-    "postcss": "*",
-    "stylelint": "*",
+    "eslint-loader": "*",
+    "eslint-plugin-import": "*",
+    "extract-text-webpack-plugin": "*",
+    "file-loader": "*",
+    "json-loader": "*",
+    "node-sass": "*",
+    "postcss-loader": "*",
+    "sass-loader": "*",
+    "style-loader": "*",
     "stylelint-config-standard": "*",
     "stylelint-order": "*",
-    "stylelint-rscss": "*"
+    "stylelint-rscss": "*",
+    "stylelint-webpack-plugin": "*",
+    "webpack": "*",
+    "webpack-livereload-plugin": "*"
   },
   "dependencies": {
     "node-reset-scss": "*",
     "sass-mq": "*"
-  },
-  "eslintConfig": {
-    "extends": "airbnb-base/legacy",
-    "rules": {
-      "indent": [
-        "error",
-        "tab"
-      ],
-      "no-tabs": "off"
-    }
-  },
-  "stylelint": {
-    "extends": [
-      "stylelint-config-standard",
-      "stylelint-rscss/config"
-    ],
-    "plugins": [
-      "stylelint-order"
-    ],
-    "rules": {
-      "at-rule-no-vendor-prefix": true,
-      "indentation": "tab",
-      "media-feature-name-no-vendor-prefix": true,
-      "order/declaration-block-properties-alphabetical-order": true,
-      "property-no-vendor-prefix": true,
-      "selector-attribute-quotes": "always",
-      "selector-no-vendor-prefix": true,
-      "string-quotes": "double",
-      "value-no-vendor-prefix": true
-    }
   }
 }

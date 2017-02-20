@@ -301,14 +301,7 @@ OPTIONAL_APPS = (
 # CUSTOM SETTINGS #
 ###################
 
-# Path to the Gruntfile
-GRUNT_PATH = os.path.join(PROJECT_ROOT, "theme", "static", "Gruntfile.js")
-
 FORMS_USE_HTML5 = True
-
-# Enable CSS minification besides concatenation by Django Compressor
-COMPRESS_CSS_FILTERS = ["compressor.filters.css_default.CssAbsoluteFilter",
-                        "compressor.filters.cssmin.rCSSMinFilter"]
 
 ##################
 # LOCAL SETTINGS #

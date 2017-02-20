@@ -11,14 +11,17 @@ you've installed the one-time dependencies.
 ```bash
 # Clone the source from git or hg, then...
 cd {{ project_name }}
+
 # Create {{ project_name }}/local_settings.py
 mkvirtualenv {{ project_name }}
-cd theme/static
-npm install
-cd ../..
 pip install -r requirements.txt
 python manage.py createdb
-python manage.py gruntserver
+python manage.py runserver
+
+# Start Webpack on another terminal / tab
+cd theme/static
+npm install
+npm run dev
 ```
 
 Get the static files and database from production (you must have the right

@@ -10,29 +10,20 @@
 		border: none;
 	}
 
-	> .image-wraper { /* stylelint-disable-line */
-		margin-bottom: _size(element-margin);
-
+	> .image-wraper { // stylelint-disable-line rscss/class-format
 		> img {
 			width: 100%;
-		}
-
-		&.-cover {
-			margin-left: -(_size(element-margin));
-			margin-right: -(_size(element-margin));
-			margin-top: -(_size(element-margin));
 		}
 	}
 
 	// Generate all color variations
 	@each $i in map-keys(_palette(highlight)) {
-		&.-style-#{$i} { /* stylelint-disable-line */
+		&.-style-#{$i} { // stylelint-disable-line rscss/class-format
 			background-color: _palette(highlight, $i);
 			border: none;
 			color: #fff;
 
-			h2, h3, h4, h5, h6, a { /* stylelint-disable-line */
-				border-color: currentColor;
+			h2, h3, h4, h5, h6, a { // stylelint-disable-line
 				color: inherit;
 			}
 		}
