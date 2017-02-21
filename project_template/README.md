@@ -1,6 +1,6 @@
 # {{ project_name }}
 
-A Mezzanine project based on [mezzanine-boilerplate].
+A Mezzanine project based on [mezzanine-boilerplate] v1.6.
 
 ## Quickstart
 
@@ -42,5 +42,5 @@ Mezzanine's default Fabfile, but it will only work on Webfaction. You will have
 to include Mezzanine's default deployment resources if you want to deploy to a
 VPS.
 
-[mezzanine-boilerplate]: https://gitlab.com/jerivas/mezzanine-boilerplate/blob/v1.5.0/README.md
+[mezzanine-boilerplate]: https://gitlab.com/jerivas/mezzanine-boilerplate/blob/v1.6.0/README.md
 [mezzanine-webf]: https://github.com/jerivas/mezzanine-webf/tree/v0.4.2
