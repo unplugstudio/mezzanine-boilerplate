@@ -3,31 +3,28 @@
 The boilerplate encourages you to use a modern approach to manage your frontend
 code (CSS and Javascript). Basically, we want to achieve the following:
 
-- Avoid keeping track of third-party dependencies (like jQuery) in the
+- Avoid adding code from third-party dependencies (like jQuery) to the
   project's repository.
 - Support explicit importing/inclusion of CSS and JS dependencies. This
-  contrasts with the popular approach of relying on the global namespace of CSS
-  and JS to "share" code on the application level.
+  contrasts with the approach of relying on the global namespace of CSS and JS
+  to "share" code on the application level.
 - Follow better development practices in frontend programming, like loose
   coupling, reusable code, and DRYness.
 
 In practice, this means following some encapsulation and file organization
-rules, and using a task runner to handle dependencies and bundling.
+rules, and incorporate tooling handle dependencies and bundling.
 
 ## Package (dependency) management
 
 You're most likely familiar with [pip], the recommended tool for installing
-Python packages. If a Python package wants to be widely available, making it
-pip-installable is the way to go. In the Javascript world (and the frontend
-world for the purpose of this document), the equivalent is [npm], or Node
-Package Manager. Don't let the name throw you off, it is not limited to Node
-packages, it is arguably the best way to get and manage web-development related
-software.
+Python packages. Javascript has several package managers, but arguably the most
+popular is npm (Node Package Manager).
 
 npm will allow us to do in the frontend what we already do in the backend with
 pip. Namely, we will be able to list dependencies in a file that will be
 tracked in VCS and ensure that all developers share the same environment
-without the need of tracking third-party software in the project's repository.
+without the need of tracking third-party source code in the project's
+repository.
 
 Take jQuery for example. The "normal" approach is to include a file like
 `jquery.js` in your repo to make sure it is distributed wherever the project
@@ -42,6 +39,12 @@ In a similar manner, npm supports a `package.json` file where you can list all
 your dependencies. You then check this file into VCS, and all developers can
 install the packages they need in their computers with one command. Neat!
 
+Note that `package.json` stores project-wide dependencies in the `dependencies`
+key, and development-only dependencies under `devDependencies`. Basically,
+anything that is imported / used in your frontend code should go under
+`dependencies`, and all tools, linters, and support packages go in
+`devDependencies`.
+
 Continuing with the Python parallels, npm also fulfills the role of
 [virtualenv]. Everything you install via npm lives in a `node_modules` folder
 alongside `package.json`, making all packages local to each project. You should
@@ -55,57 +58,85 @@ boilerplate:
 - You can find the frontend dependencies for a project created with the
   boilerplate in `theme/static/package.json`.
 - Fastest way to get all packages is explained in the Quickstart section of the
-  docs's home.
+  docs' home.
 - Always save new packages to `packages.json` with `npm install some_package
-  --save`.
+  --save`. Development dependencies (transpilers, command line utilities, etc)
+  can be saved to `devDependencies` with the `--save-dev` flag.
 - Keep your version of npm up to date, and make sure all devs are using the
   same version.
 - Use npm to handle all frontend dependencies. We want to avoid tracking
   third-party code as much as possible. If a package is not on npm, you may be
   able to install from GitHub or even package and publish it yourself.
 
-## Task runner
+## Module bundling
 
-We use the term task runner to refer to a tool that takes all our frontend code
-and "builds" it into something that browsers can understand out of the box. In
-most cases, this means resolving package dependencies, compiling (or
-transpiling) code, concatenating files, etc. Many tools exist for this purpose
-in the frontend realm, but the one recommended by the boilerplate is [Grunt].
-It is widely adopted, documented, and has an extensive plug-in ecosystem.
+We're using Webpack 2 to compile and bundle all frontend dependencies. It
+allows us to create small, independent, focused components. They are then
+bundled together into regular Javascript and CSS files ready to be served to
+the browser.
 
-Grunt needs a configuration file that tells it what tasks to perform. The
-boilerplate provides such file in `theme/static/Gruntfile.js`. In this file, we
-define several tasks:
+If you're not familiar with Webpack you should check out the [initial concepts]
+documentation. That should be enough to help you get around the main
+configuration file: `theme/static/webpack.config.babel.js`. This is basically
+what it does:
 
-- Sass: Transform the specified .scss file into a standard .css file.
-- Autoprefixer: Add browser-specific CSS prefixes to achieve maximum style
-  compatibility.
-- Concat: Concatenate (join) the specified files into one.
-- Watch: Keep track of changes in .scss and .js files to automatically re-run
-  the previous three tasks.
+- Resolves all imports and converts ES6 modules to ES5.
+- Takes the SASS stylesheet and converts it to CSS, adding browser prefixes.
+- Dumps the resulting JS and CSS files (and any supporting files like images
+  and fonts) into `static/build`.
+- If ran in development mode (`npm run dev`), JS and CSS files will be watched
+  for changes and the page will be autoreloaded (if using the LiveReload
+  browser extension).
+- If ran in production mode (`npm run build`), JS and CSS files will be
+  minified before being emitted to `static/build`.
 
-To start the task runner, simply run `grunt` while on `theme/static`. This will
-perform all tasks once and then keep watching for file changes. You can exit
-with `Ctrl + C`. Note that you must have installed the one-time dependencies
-explained in the doc's home.
+The Django template simply has to include the compiled static files (this is
+already done in `base.html`):
 
-For convenience, a custom management command has been provided to start `grunt`
-any time you start Django's development server. The command is `gruntserver`,
-and it behaves exactly like `runserver`. For most cases, running `gruntserver`
-is all you need to do to get all this working.
+```django
+<link rel="stylesheet" href="{% static 'build/main.css' %}">
+<script src="{% static 'build/main.js' %}"></script>
+```
 
-Finally, the `watch` task has [livereload] support enabled by default. Simply
-enable live reloading in your browser and visit the development site while
-Grunt is running. Static assets will be reloaded automatically whenever they
-change.
+It's important to note that the `build/` folder is not kept under version
+control. To deploy the bundled assets to production, the `fabfile` will execute
+`npm run build` and copy the resulting files to the remote server. If you don't
+use Fabric for deployments, you'll need to take care of that manually.
 
-## CSS and Javascript code
+## Code quality
 
-The specifics to each of these components are explained on their own pages.
+The project uses [eslint] and [stylelint] to check JS and SASS code for errors
+and code style. They are both listed in the `devDependencies` and can be
+executed over the entire frontend codebase with `npm run -s lint:js` and `npm
+run -s lint:css` respectively. For convenience they will be executed one after
+the other if invoked with `npm run -s lint`.
+
+For Javascript we're following the popular [AirBnB style guide] with minor
+modifications, which you can see in `theme/static/.eslintrc.js`. The ES6 to ES5
+transpilation is handled by Babel, and configured by `theme/static/.babelrc`.
+
+For SASS/CSS we're following the [standard configuration] and also the [RSCSS
+style guide]. Above all, when writing CSS components, remember to keep them
+small and focused, and add variants to a component instead of overriding styles
+from container elements. The complete configuration is available at
+`theme/static/.stylelintrc`.
+
+Webpack will add browser prefixes using [autoprefixer], which is configured by
+the file `theme/static/browserslist`.
+
+We recommend that instead of running the linters manually you install a code
+editor plugin that will automatically run them as you write your code. Both
+eslint and stylelint have plugins available for Sublime Text, Atom, VS Code,
+and more.
 
 [pip]: https://pip.pypa.io/en/stable/
 [npm]: http://npmjs.com/
 [virtualenv]: https://virtualenv.readthedocs.org/en/latest/
 [documented]: https://docs.npmjs.com/
-[Grunt]: http://gruntjs.com/
-[livereload]: https://github.com/gruntjs/grunt-contrib-watch#optionslivereload
+[initial concepts]: https://webpack.js.org/concepts/
+[eslint]: http://eslint.org/
+[stylelint]: https://github.com/stylelint/stylelint
+[AirBnB style guide]: https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base
+[standard configuration]: https://github.com/stylelint/stylelint-config-standard
+[RSCSS style guide]: http://rscss.io/
+[autoprefixer]: https://github.com/postcss/autoprefixer

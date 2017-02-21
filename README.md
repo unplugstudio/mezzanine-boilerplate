@@ -8,18 +8,19 @@ projects (see the Quickstart section).
 
 ## Overview
 
-The current version of the boilerplate is 1.5, it makes use of the following
+The current version of the boilerplate is 1.6, it makes use of the following
 technology stack:
 
-- Python 2.7
+- Python 2.7 (though Python 3 should work too)
 - Django 1.8 (we're sticking to a LTS version)
 - Mezzanine 4.2
-- Javascript (ES5)
+- Webpack 2
+- Javascript (ES6)
 - Sass
 
 Make sure you're using the correct version of the boilerplate for each project!
-You can use explore the tags in this repository to look for the one that
-matches your project.
+You can explore the tags in this repository to look for the one that matches
+your project.
 
 ## Quickstart
 
@@ -52,9 +53,14 @@ cd theme/static
 npm update --save
 npm update --save-dev --only=dev
 
-# Start the development server
+# Start Webpack to create the CSS and JS files
+npm run dev
+
+# Start the Django development server to actually serve the site
 cd ../..
-python manage.py gruntserver
+python manage.py runserver
+
+# Now visit localhost:8000
 ```
 
 ## One-time requirements
@@ -70,7 +76,6 @@ system. This will allow you to create any number of projects without issue.
 - libjpeg
 - Node JS (LTS version is preferred)
 - npm (usually comes with Node)
-- grunt-cli
 
 In a Ubuntu machine, this should be enough:
 
@@ -80,9 +85,6 @@ sudo apt-get install libjpeg8 libjpeg8-dev postgresql python-pip git npm
 sudo apt-get build-dep python-imaging
 sudo pip install -U pip virtualenvwrapper mercurial
 echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
-
-# Grunt and eslint
-sudo npm install -g grunt-cli
 ```
 
 [one-time requirements]: #one-time-requirements
