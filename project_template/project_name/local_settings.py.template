@@ -26,12 +26,11 @@ DATABASES = {
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
 ###################
 # DEPLOY SETTINGS #
 ###################
-
-# Domains for public site
-ALLOWED_HOSTS = []
 
 # These settings are used by the default fabfile.py provided.
 # Check fabfile.py for defaults.
@@ -42,7 +41,7 @@ FABRIC = {
     # "SSH_PASS": "",  # SSH and Webfaction account password
     # "SSH_KEY_PATH":  "",  # Local path to SSH key file, for key-based auth
     # "HOSTS": [""],  # The IP address of your Webfaction server
-    "DOMAINS": ALLOWED_HOSTS,  # Edit domains in ALLOWED_HOSTS
+    "DOMAINS": [],  # Will be used as ALLOWED_HOSTS in production
     "LIVE_DOMAIN": "{{ project_name }}.com",  # Domain to associate the app with
     "LIVE_SUBDOMAIN": "www",  # Subdomain to associate the app with (optional)
     "REQUIREMENTS_PATH": "requirements.txt",  # Project's pip requirements

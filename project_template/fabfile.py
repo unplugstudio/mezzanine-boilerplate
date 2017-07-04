@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
-from future.builtins import open
 
+import io
 import os
 import re
 import sys
@@ -119,7 +119,10 @@ def get_webf_session():
     Return an instance of a Webfaction server and a session for authentication
     to make further API calls.
     """
-    import xmlrpclib
+    try:
+        import xmlrpclib
+    except ImportError:
+        import xmlrpc.client as xmlrpclib
     server = xmlrpclib.ServerProxy("https://api.webfaction.com/")
     print("Logging in to Webfaction as %s." % env.user)
     if env.password is None:
@@ -278,7 +281,7 @@ def upload_template_and_reload(name):
     if exists(remote_path):
         with hide("stdout"):
             remote_data = run("cat %s" % remote_path, show=False)
-    with open(local_path, "r") as f:
+    with io.open(local_path, "r") as f:
         local_data = f.read()
         # Escape all non-string-formatting-placeholder occurrences of '%':
         local_data = re.sub(r"%(?!\(\w+\)s)", "%%", local_data)
@@ -502,9 +505,9 @@ def create():
                 run("rm -rf %s" % env.proj_name)
             else:
                 abort("Aborted at user request")
-        run("virtualenv %s" % env.proj_name)
+        run("virtualenv -p python3.6 %s" % env.proj_name)
         # Make sure we don't inherit anything from the system's Python
-        run("touch %s/lib/python2.7/sitecustomize.py" % env.proj_name)
+        run("touch %s/lib/python3.6/sitecustomize.py" % env.proj_name)
 
     # Create elements with the Webfaction API
     _print(blue("Creating database and website records in the Webfaction "
@@ -717,10 +720,11 @@ def deploy():
     # Upload templated config files
     _print(blue("Uploading configuration files...", bold=True))
     # Get the application port we saved on create() into the context
-    with tempfile.TemporaryFile() as temp:
+    with tempfile.TemporaryFile("w+b") as temp:
         get("%s/app.port" % env.proj_path, temp)
         temp.seek(0)
-        port = temp.read()
+        data = temp.read()
+        port = data.decode("utf-8")
         env.gunicorn_port = port.strip()
     for name in get_templates():
         upload_template_and_reload(name)

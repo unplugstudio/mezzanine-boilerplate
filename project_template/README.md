@@ -1,6 +1,6 @@
 # {{ project_name }}
 
-A Mezzanine project based on [mezzanine-boilerplate] v1.6.
+A Mezzanine project based on [mezzanine-boilerplate] v1.7 (with Python3).
 
 ## Quickstart
 
@@ -13,14 +13,14 @@ you've installed the one-time dependencies.
 cd {{ project_name }}
 
 # Create {{ project_name }}/local_settings.py
-mkvirtualenv {{ project_name }}
+mkvirtualenv -p python3.6 {{ project_name }}
 pip install -r requirements.txt
 python manage.py createdb
 python manage.py runserver
 
 # Start Webpack on another terminal / tab
 cd theme/static
-npm install
+npm install --save-dev --save
 npm run dev
 ```
 
@@ -42,5 +42,5 @@ Mezzanine's default Fabfile, but it will only work on Webfaction. You will have
 to include Mezzanine's default deployment resources if you want to deploy to a
 VPS.
 
-[mezzanine-boilerplate]: https://gitlab.com/jerivas/mezzanine-boilerplate/blob/v1.6.0/README.md
+[mezzanine-boilerplate]: https://gitlab.com/jerivas/mezzanine-boilerplate/blob/v1.7.0/README.md
 [mezzanine-webf]: https://github.com/jerivas/mezzanine-webf/tree/v0.4.2
