@@ -20,7 +20,8 @@ python manage.py runserver
 
 # Start Webpack on another terminal / tab
 cd theme/static
-npm install --save-dev --save
+npm install --save-dev --only=dev
+npm install --save
 npm run dev
 ```
 

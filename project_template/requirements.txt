@@ -1,5 +1,5 @@
-Mezzanine>=4.2<4.3
-Django>=1.8<1.9
+Mezzanine>=4.2,<4.3
+Django>=1.8,<1.9
 -e git+https://gitlab.com/tigris-webdev/mezzy.git#egg=mezzy
 django-debug-toolbar
 fabric3

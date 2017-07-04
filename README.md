@@ -11,7 +11,7 @@ projects (see the Quickstart section).
 The current version of the boilerplate is 1.6, it makes use of the following
 technology stack:
 
-- Python 2.7 (though Python 3 should work too)
+- Python 3.6 (though Python 2.7 should work too)
 - Django 1.8 (we're sticking to a LTS version)
 - Mezzanine 4.2
 - Webpack 2
@@ -37,7 +37,7 @@ createdb project_name -O project_name
 git clone https://gitlab.com/jerivas/mezzanine-boilerplate.git
 
 # Create the project
-mkvirtualenv project_name
+mkvirtualenv -p python3.6 project_name
 pip install mezzanine
 mezzanine-project --template mezzanine-boilerplate/project_template --extension py,json,md,sublime-project project_name
 cd project_name
@@ -50,8 +50,8 @@ python manage.py createdb --noinput --nodata
 # Install npm dependencies
 # By using `update` the versions will be updated in package.json.
 cd theme/static
-npm update --save
 npm update --save-dev --only=dev
+npm update --save
 
 # Start Webpack to create the CSS and JS files
 npm run dev
@@ -70,7 +70,7 @@ system. This will allow you to create any number of projects without issue.
 
 - Git or mercurial
 - Postgres database server
-- Python 2.7, pip, and Python development utilities
+- Python 3.6, pip, and Python development utilities
 - Flake8 (to get both PEP8 linting and error checking)
 - virtualenv and virtualenvwrapper
 - libjpeg
