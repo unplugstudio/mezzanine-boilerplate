@@ -18,6 +18,8 @@
 // Created as an extendable to group into a single selector.
 %base-col {
 	@include grid-col-gutter;
+
+	width: 100%; // Start being 100% wide, individual breakponts will clamp the width
 }
 
 // Make all columns in all viewports

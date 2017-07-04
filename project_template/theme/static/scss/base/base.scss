@@ -24,5 +24,12 @@ body {
 }
 
 img {
+	height: auto;
 	max-width: 100%;
+}
+
+// Required by IE11
+// http://stackoverflow.com/a/20095764
+main {
+	display: block;
 }

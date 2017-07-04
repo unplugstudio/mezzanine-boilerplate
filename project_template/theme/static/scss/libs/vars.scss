@@ -19,11 +19,11 @@ $misc: (
 $duration: (
 	fast:				0.1s,
 	medium:				0.2s,
-	slow:				0.5s
+	slow:				0.4s
 );
 
 $size: (
-	border-radius:		4px,
+	border-radius:		5px,
 	border-width:		1px,
 	element-height:		2.5em,
 	element-margin:		2rem,
@@ -31,24 +31,25 @@ $size: (
 	gutter: (
 		slim:			0rem,
 		normal:			2rem,
-		wide:			4rem
+		wide:			3rem
 	)
 );
 
 $font: (
 	family:				(Arial, Helvetica, sans-serif),
-	family-fixed:		("Courier New", monospace),
+	family-fixed:		(monospace),
 	family-heading:		(Arial, Helvetica, sans-serif),
-	weight:				normal,
-	weight-bold:		bold
+	weight:				400,
+	weight-bold:		700
 );
 
 $palette: (
 	bg:					#fff,
-	bg-alt:				#eaeaea,
-	fg:					#444,
-	fg-bold:			#222,
-	fg-light:			#999,
+	bg-alt:				#f5f5f5,
+	bg-dark: 			#5b6770,
+	fg:					#333,
+	fg-bold:			#111,
+	fg-light:			#777,
 	border:				rgba(144, 144, 144, 0.25),
 	border-bg:			rgba(144, 144, 144, 0.1),
 	border2:			rgba(144, 144, 144, 0.5),
@@ -60,6 +61,7 @@ $palette: (
 		error:			#d9534f
 	),
 	highlight: (
-		1:				var(--highlight-1, #3d97ba)
+		1:				#003584,
+		2:				#ff9e1b,
 	)
 );

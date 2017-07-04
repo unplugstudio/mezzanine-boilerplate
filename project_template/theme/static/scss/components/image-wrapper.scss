@@ -1,0 +1,47 @@
+.image-wrapper {
+	margin-bottom: _size(element-margin);
+	position: relative;
+
+	> img {
+		display: block;
+	}
+
+	&.-fit {
+		display: block;
+		width: 100%;
+
+		> img {
+			width: 100%;
+		}
+	}
+
+	&.-cover {
+		display: block;
+		margin-left: -(_size(element-margin));
+		margin-right: -(_size(element-margin));
+		margin-top: -(_size(element-margin));
+	}
+
+	&.-center {
+		display: block;
+		text-align: center;
+
+		> img {
+			display: inline-block;
+		}
+	}
+
+	@include mq($from: sm) {
+		&.-left {
+			float: left;
+			margin-right: _size(element-margin);
+			max-width: 40%;
+		}
+
+		&.-right {
+			float: right;
+			margin-left: _size(element-margin);
+			max-width: 40%;
+		}
+	}
+}

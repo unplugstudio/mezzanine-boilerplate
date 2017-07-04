@@ -1,19 +1,16 @@
+$padding: _size(element-margin);
+
 .panel-item {
-	@include padding(_size(element-margin), _size(element-margin));
+	@include padding($padding, $padding);
 
 	background-color: _palette(bg);
 	border: solid _size(border-width) _palette(border);
+	border-radius: _size(border-radius);
 	margin-bottom: _size(element-margin);
 
 	&.-alt {
 		background-color: _palette(bg-alt);
 		border: none;
-	}
-
-	> .image-wraper { // stylelint-disable-line rscss/class-format
-		> img {
-			width: 100%;
-		}
 	}
 
 	// Generate all color variations
@@ -23,7 +20,7 @@
 			border: none;
 			color: #fff;
 
-			h2, h3, h4, h5, h6, a { // stylelint-disable-line
+			h2, h3, h4, h5, h6, a, strong { // stylelint-disable-line
 				color: inherit;
 			}
 		}

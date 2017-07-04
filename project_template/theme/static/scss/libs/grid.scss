@@ -42,18 +42,19 @@
 /// @param {number} $width - Number of columns, or size in `em`, `px`, `pt`, etc.
 @mixin grid-col-width($width) {
 	@if unitless($width) {
-		width: percentage($width / _misc(columns));
+		flex: 0 0 percentage($width / _misc(columns));
+		max-width: percentage($width / _misc(columns));
 	}
 
 	@else {
-		width: $width;
+		flex: 0 0 $width;
+		max-width: $width;
 	}
 }
 
 /// Create the grid column gutter using padding.
 /// @param {number} $gutter [_size(gutter, normal)] - Desired gutter size
 @mixin grid-col-gutter($gutter: _size(gutter, normal)) {
-	max-width: 100%;
 	padding-left: ($gutter * 0.5);
 	padding-right: ($gutter * 0.5);
 }

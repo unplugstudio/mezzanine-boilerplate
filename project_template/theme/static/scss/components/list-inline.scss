@@ -1,0 +1,34 @@
+.list-inline {
+	list-style: none;
+	padding-left: 0;
+
+	> li {
+		display: inline-block;
+		margin-right: (_size(element-margin) * 0.5);
+		padding: 0;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+
+	&.-separated {
+		> li {
+			&::after {
+				content: "|";
+				display: inline-block;
+				margin-left: (_size(element-margin) * 0.5);
+			}
+
+			&:last-child {
+				&::after {
+					display: none;
+				}
+			}
+		}
+	}
+
+	&.-icons {
+		font-size: 1.6rem;
+	}
+}

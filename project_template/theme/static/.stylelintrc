@@ -9,8 +9,9 @@
   "rules": {
     "at-rule-no-vendor-prefix": true,
     "indentation": "tab",
+    "length-zero-no-unit": null,
     "media-feature-name-no-vendor-prefix": true,
-    "order/declaration-block-properties-alphabetical-order": true,
+    "order/properties-alphabetical-order": true,
     "property-no-vendor-prefix": true,
     "rscss/no-descendant-combinator": false,
     "selector-attribute-quotes": "always",

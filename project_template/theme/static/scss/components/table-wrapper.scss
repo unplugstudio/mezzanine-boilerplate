@@ -1,0 +1,75 @@
+.table-wrapper {
+	max-width: 100%;
+	-webkit-overflow-scrolling: touch;
+	overflow-x: auto;
+
+	table {
+		margin: 0 0 _size(element-margin) 0;
+		width: 100%;
+	}
+
+	td,
+	th {
+		border-color: _palette(border);
+		border-style: solid;
+		border-width: 0;
+	}
+
+	th {
+		font-size: 0.9rem;
+		font-weight: _font(weight-bold);
+		text-align: left;
+		text-transform: uppercase;
+	}
+
+	&.-bordered-horizontal {
+		td,
+		th {
+			border-width: 0 0 _size(border-width);
+			padding: 0.75rem;
+		}
+
+		&:not(.-striped) {
+			td,
+			th {
+				&:first-child {
+					padding-left: 0;
+				}
+
+				&:last-child {
+					padding-right: 0;
+				}
+			}
+		}
+	}
+
+	&.-bordered-full {
+		border-collapse: separate;
+
+		table {
+			border-left: solid _size(border-width) _palette(border);
+			border-top: solid _size(border-width) _palette(border);
+		}
+
+		td,
+		th {
+			border-width: 0 _size(border-width) _size(border-width);
+			padding: 0.75rem;
+		}
+	}
+
+	&.-striped {
+		tbody {
+			tr:nth-child(odd) {
+				background-color: _palette(border-bg);
+			}
+		}
+	}
+
+	&.-compact {
+		td,
+		th {
+			padding: 0.35rem;
+		}
+	}
+}

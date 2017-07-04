@@ -1,0 +1,37 @@
+.section-wrapper {
+	@include padding(2.5rem, 0);
+
+	@include mq($from: md) {
+		@include padding(3.5rem, 0);
+	}
+
+	@include mq($from: lg) {
+		@include padding(5rem, 0);
+	}
+
+	&.-alt {
+		background-color: _palette(bg-alt);
+	}
+
+	// Apply a clearfix in case content inside is floated
+	// For example, floated images or embeds
+	> .container {
+		&::before,
+		&::after {
+			content: " ";
+			display: table;
+		}
+
+		&::after {
+			clear: both;
+		}
+	}
+
+	// Create all color variations
+	@each $i in map-keys(_palette(highlight)) {
+		&.-style-#{$i} { // stylelint-disable-line rscss/class-format
+			background-color: _palette(highlight, $i);
+			color: #fff;
+		}
+	}
+}

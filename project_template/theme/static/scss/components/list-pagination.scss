@@ -1,0 +1,60 @@
+/* Disable RSCSS class formatting so we can target the pagination class
+   used by Mezzanine out of the box (.pagination and .active) */
+/* stylelint-disable rscss/class-format */
+
+.pagination,
+.list-pagination {
+	border: solid _size(border-width) _palette(border);
+	border-radius: _size(border-radius);
+	display: inline-flex;
+	list-style-type: none;
+	max-width: 100%;
+	overflow-x: auto;
+	padding-left: 0;
+	white-space: nowrap;
+
+	li {
+		border-right: solid _size(border-width) _palette(border);
+		display: inline-flex;
+		padding-left: 0;
+
+		&:last-child {
+			border-right: none;
+		}
+
+		&.active,
+		&.-active {
+			a {
+				background-color: _palette(border2-bg);
+			}
+		}
+
+		&.disabled,
+		&.-disabled {
+			a {
+				color: _palette(fg-light);
+				cursor: not-allowed;
+			}
+		}
+	}
+
+	a {
+		display: block;
+		padding: 0.5rem 1rem;
+		transition: background-color _duration(medium);
+
+		&:hover {
+			background-color: _palette(border-bg);
+			text-decoration: none;
+		}
+
+		&:active {
+			background-color: _palette(border2-bg);
+			text-decoration: none;
+		}
+	}
+
+	span {
+		padding: 0.5rem 1rem;
+	}
+}
