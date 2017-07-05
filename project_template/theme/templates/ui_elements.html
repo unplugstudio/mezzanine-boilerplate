@@ -68,7 +68,7 @@
 					<li>Felis enim feugiat dolore viverra.</li>
 				</ul>
 				<h4>Unstyled</h4>
-				<ul class="unstyled">
+				<ul class="list-unstyled">
 					<li>Dolor pulvinar etiam magna etiam.</li>
 					<li>Sagittis adipiscing lorem eleifend.</li>
 					<li>Felis enim feugiat dolore viverra.</li>
@@ -101,6 +101,24 @@
 				<p>Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
 			</dd>
 		</dl>
+		<h4>Inline</h4>
+		<ul class="list-inline">
+			<li>Lorem, ipsum.</li>
+			<li>Lorem, ipsum.</li>
+			<li>Lorem, ipsum.</li>
+			<li>Lorem, ipsum.</li>
+		</ul>
+		<h4>Pagination</h4>
+		<ul class="list-pagination">
+			<li><span>Page 1 of 5</span></li>
+			<li class="prev -disabled"><a>←</a></li>
+			<li class="-active"><a href="#">1</a></li>
+			<li><a href="#">2</a></li>
+			<li><a href="#">3</a></li>
+			<li><a href="#">4</a></li>
+			<li><a href="#">5</a></li>
+			<li class="next"><a href="#">→</a></li>
+		</ul>
 		<hr>
 		<h3>Blockquote</h3>
 		<blockquote>
@@ -111,7 +129,6 @@
 		<div class="panel-item">
 			<p>Felis sagittis eget tempus primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Magna sed etiam ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus lorem ipsum dolor sit amet nullam. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Vestibulum ante ipsum primis in faucibus magna blandit adipiscing eu felis iaculis volutpat lorem ipsum dolor.</p>
 		</div>
-		<hr>
 		<h3>Preformatted</h3>
 		<pre><code>i = 0;
 
@@ -125,51 +142,51 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 	</div>
 	<div class="col-md-6">
 		<h3>Buttons</h3>
-		<ul class="actions">
+		<ul class="list-actions">
 			<li>
-				<a class="button style-1">Style 1</a>
+				<a class="button -style-1">Style 1</a>
 			</li>
 			<li>
 				<a class="button">Default</a>
 			</li>
 		</ul>
-		<ul class="actions">
+		<ul class="list-actions">
 			<li>
-				<a class="button style-1 big">Big</a>
+				<a class="button -style-1 -big">Big</a>
 			</li>
 			<li>
 				<a class="button">Default</a>
 			</li>
 			<li>
-				<a class="button small">Small</a>
+				<a class="button -small">Small</a>
 			</li>
 		</ul>
-		<ul class="actions fit">
+		<ul class="list-actions -fit">
 			<li>
-				<a class="button style-1 fit">Fit</a>
+				<a class="button -style-1 -fit">Fit</a>
 			</li>
 			<li>
-				<a class="button fit">Fit</a>
-			</li>
-		</ul>
-		<ul class="actions fit small">
-			<li>
-				<a class="button style-1 fit small">Fit + Small</a>
-			</li>
-			<li>
-				<a class="button fit small">Fit + Small</a>
+				<a class="button -fit">Fit</a>
 			</li>
 		</ul>
-		<ul class="actions">
+		<ul class="list-actions -fit -small">
 			<li>
-				<a class="button style-1 icon fa-search">Icon</a>
+				<a class="button -style-1 -fit -small">Fit + Small</a>
+			</li>
+			<li>
+				<a class="button -fit -small">Fit + Small</a>
+			</li>
+		</ul>
+		<ul class="list-actions">
+			<li>
+				<a class="button -style-1 icon fa-search">Icon</a>
 			</li>
 			<li>
 				<a class="button icon fa-download">Icon</a>
 			</li>
 		</ul>
-		<ul class="actions">
-			<li><span class="button style-1 disabled">Special</span></li>
+		<ul class="list-actions">
+			<li><span class="button -style-1 disabled">Special</span></li>
 			<li><span class="button disabled">Default</span></li>
 		</ul>
 		<hr>
@@ -222,9 +239,9 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 					<textarea id="message" name="message" placeholder="Enter your message" rows="6"></textarea>
 				</div><!-- Break -->
 				<div class="col-xs-12">
-					<ul class="actions">
+					<ul class="list-actions">
 						<li><input class="button" type="reset" value="Reset"></li>
-						<li class="float-md-right"><input class="button style-1" type="submit" value="Send"></li>
+						<li class="float-md-right"><input class="button -style-1" type="submit" value="Send"></li>
 					</ul>
 				</div>
 			</div>

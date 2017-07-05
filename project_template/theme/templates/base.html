@@ -1,31 +1,37 @@
 {% load pages_tags mezzanine_tags mezzy_tags staticfiles %}
-{% load_theme as theme %}
+{% comment %}{% load_theme as theme %}{% endcomment %}
 
 <!DOCTYPE html>
 <html>
 
 <head>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
-<meta name="description" content="{% block meta_description %}{% endblock %}">
-<title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
-<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+	<meta name="description" content="{% block meta_description %}{% endblock %}">
+	<title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+	<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 
-{% ifinstalled mezzanine.blog %}
-<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url 'blog_post_feed' 'rss' %}">
-<link rel="alternate" type="application/atom+xml" title="Atom" href="{% url 'blog_post_feed' 'atom' %}">
-{% endifinstalled %}
+	{% ifinstalled mezzanine.blog %}
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url 'blog_post_feed' 'rss' %}">
+	<link rel="alternate" type="application/atom+xml" title="Atom" href="{% url 'blog_post_feed' 'atom' %}">
+	{% endifinstalled %}
 
-{% compress css %}
-<link rel="stylesheet" href="{% static 'build/main.css' %}">
-{% block extra_css %}{% endblock %}
-{% endcompress %}
+	{% compress css %}
+	<link rel="stylesheet" href="{% static 'build/main.css' %}">
+	{% endcompress %}
 
-{% block extra_head %}{% endblock %}
+	{% compress css inline %}
+	{% block inline_css %}{% endblock %}
+	{% endcompress %}
+
+	{% block extra_head %}{% endblock %}
 </head>
 
-<body id="{% block body_id %}body{% endblock %}">
+<body class="{% block body_class %}body{% endblock %}">
+
+{# Skip to main #}
+	<a href="#main" class="skip-to-main">Skip to main content</a>
 
 {# Messages #}
 	{% nevercache %}
@@ -44,8 +50,16 @@
 {# Banner #}
 	{% block banner %}{% endblock %}
 
-{# Main #}
-	{% block main %}{% endblock %}
+{# All content #}
+	<main id="main" role="main">
+		{% block all_content %}
+			<div class="section-wrapper">
+				<div class="container">
+					{% block main %}{% endblock %}
+				</div>
+			</div>
+		{% endblock all_content %}
+	</main>
 
 {# Footer #}
 	<footer id="footer">
@@ -58,6 +72,10 @@
 	{% compress js %}
 	<script src="{% static 'build/main.js' %}"></script>
 	{% block extra_js %}{% endblock %}
+	{% endcompress %}
+
+	{% compress js inline %}
+	{% block inline_js %}{% endblock %}
 	{% endcompress %}
 
 	{% block extra_bottom %}{% endblock %}
