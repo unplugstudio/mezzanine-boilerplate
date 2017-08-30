@@ -3,9 +3,10 @@
 *.db
 *.pot
 *.doctree
-*.sublime-workspace
+*.sublime-*
 .DS_Store
 .coverage
+.vscode
 /project_template/static/
 build/
 node_modules/
