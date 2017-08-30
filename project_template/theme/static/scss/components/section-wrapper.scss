@@ -29,7 +29,8 @@
 
 	// Create all color variations
 	@each $i in map-keys(_palette(highlight)) {
-		&.-style-#{$i} { // stylelint-disable-line rscss/class-format
+		// stylelint-disable-next-line rscss/class-format
+		&.-style-#{$i} {
 			background-color: _palette(highlight, $i);
 			color: #fff;
 		}

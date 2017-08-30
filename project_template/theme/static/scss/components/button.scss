@@ -4,7 +4,8 @@ input[type="reset"] {
 	cursor: pointer;
 }
 
-.button { // stylelint-disable-line rscss/class-format
+// stylelint-disable-next-line rscss/class-format
+.button {
 	appearance: none;
 	background-color: transparent;
 	border: solid _size(border-width) currentColor;

@@ -5,10 +5,10 @@
 
 // Fonts
 
-// Third-party imports
+// Third-party imports (from node_modules)
 
-@import "../node_modules/sass-mq/mq";
-@import "../node_modules/node-reset-scss/scss/reset";
+@import "~sass-mq/mq";
+@import "~node-reset-scss/scss/reset";
 
 // Base
 
