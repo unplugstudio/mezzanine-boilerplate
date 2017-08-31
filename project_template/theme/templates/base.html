@@ -10,7 +10,10 @@
 	<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
 	<meta name="description" content="{% block meta_description %}{% endblock %}">
 	<title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
-	<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+
+	{% if theme.favicon %}
+	<link rel="shortcut icon" href="{{ theme.favicon.url }}">
+	{% endif %}
 
 	{% ifinstalled mezzanine.blog %}
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url 'blog_post_feed' 'rss' %}">
@@ -71,7 +74,6 @@
 {# Scripts #}
 	{% compress js %}
 	<script src="{% static 'build/main.js' %}"></script>
-	{% block extra_js %}{% endblock %}
 	{% endcompress %}
 
 	{% compress js inline %}

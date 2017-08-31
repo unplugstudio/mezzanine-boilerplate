@@ -301,6 +301,11 @@ OPTIONAL_APPS = (
 # CUSTOM SETTINGS #
 ###################
 
+FILEBROWSER_EXTENSIONS = {
+    "Image": [".jpg", ".jpeg", ".gif", ".png", ".svg", ".ico"],  # Allow .ico
+    "Video": [".mp4", ".webm", ".avi", ".mov", ".wmv"],  # Allow .webm
+}
+
 FORMS_USE_HTML5 = True
 
 ##################
