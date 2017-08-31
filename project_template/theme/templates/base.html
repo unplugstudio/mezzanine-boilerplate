@@ -80,6 +80,11 @@
 
 	{% block extra_bottom %}{% endblock %}
 
+	{% if user.is_staff %}
+		{# Add jQuery for staff users (needed for the inline edit tools) #}
+		<script src="{% static 'mezzanine/js/'|add:settings.JQUERY_FILENAME %}"></script>
+	{% endif %}
+
 	{% include "includes/footer_scripts.html" %}
 
 </body>
