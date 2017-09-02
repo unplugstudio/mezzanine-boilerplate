@@ -41,33 +41,6 @@ const prodPlugins = [
 	new webpack.optimize.UglifyJsPlugin(),
 ];
 
-const devStats = {
-	hash: false,
-	version: false,
-	timings: false,
-	assets: false,
-	entrypoints: false,
-	chunks: false,
-	chunkModules: false,
-	modules: false,
-	reasons: false,
-	depth: false,
-	usedExports: false,
-	providedExports: false,
-	children: false,
-	source: false,
-	errors: true,
-	errorDetails: true,
-	warnings: true,
-	publicPath: false,
-	performance: false,
-};
-
-const prodStats = {
-	...devStats,
-	assets: true,
-};
-
 module.exports = {
 	entry: {
 		main: './js/main.js',
@@ -109,7 +82,7 @@ module.exports = {
 		new webpack.EnvironmentPlugin({ NODE_ENV: ENV }),
 	].concat(IS_PROD ? prodPlugins : devPlugins),
 
-	stats: IS_PROD ? prodStats : devStats,
+	stats: IS_PROD ? 'normal' : 'minimal',
 
 	devtool: IS_PROD ? 'source-map' : 'inline-source-map',
 };
