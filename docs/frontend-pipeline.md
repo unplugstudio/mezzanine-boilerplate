@@ -1,7 +1,7 @@
 # Frontend pipeline
 
 The boilerplate encourages you to use a modern approach to manage your frontend
-code (CSS and Javascript). Basically, we want to achieve the following:
+code (CSS and JavaScript). Basically, we want to achieve the following:
 
 - Avoid adding code from third-party dependencies (like jQuery) to the
   project's repository.
@@ -17,7 +17,7 @@ rules, and incorporate tooling handle dependencies and bundling.
 ## Package (dependency) management
 
 You're most likely familiar with [pip], the recommended tool for installing
-Python packages. Javascript has several package managers, but arguably the most
+Python packages. JavaScript has several package managers, but arguably the most
 popular is npm (Node Package Manager).
 
 npm will allow us to do in the frontend what we already do in the backend with
@@ -70,9 +70,9 @@ boilerplate:
 
 ## Module bundling
 
-We're using Webpack 2 to compile and bundle all frontend dependencies. It
+We're using Webpack to compile and bundle all frontend dependencies. It
 allows us to create small, independent, focused components. They are then
-bundled together into regular Javascript and CSS files ready to be served to
+bundled together into regular JavaScript and CSS files ready to be served to
 the browser.
 
 If you're not familiar with Webpack you should check out the [initial concepts]
@@ -111,7 +111,7 @@ executed over the entire frontend codebase with `npm run -s lint:js` and `npm
 run -s lint:css` respectively. For convenience they will be executed one after
 the other if invoked with `npm run -s lint`.
 
-For Javascript we're following the popular [AirBnB style guide] with minor
+For JavaScript we're following the popular [AirBnB style guide] with minor
 modifications, which you can see in `theme/static/.eslintrc.js`. The ES6 to ES5
 transpilation is handled by Babel, and configured by `theme/static/.babelrc`.
 
