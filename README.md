@@ -8,13 +8,13 @@ projects (see the Quickstart section).
 
 ## Overview
 
-The current version of the boilerplate is 1.6, it makes use of the following
+The current version of the boilerplate is 1.8, it makes use of the following
 technology stack:
 
 - Python 3.6 (though Python 2.7 should work too)
 - Django 1.8 (we're sticking to a LTS version)
 - Mezzanine 4.2
-- Webpack 2
+- Webpack 3
 - Javascript (ES6)
 - Sass
 
@@ -42,9 +42,6 @@ pip install mezzanine
 mezzanine-project --template mezzanine-boilerplate/project_template --extension py,json,md,sublime-project project_name
 cd project_name
 pip install -r requirements.txt
-# Stop, go update the DB settings to use Postgres in local_settings.py
-# Also make sure you create migrations for the "theme" app
-# You can also comment it out from INSTALLED_APPS for this initial run
 python manage.py createdb --noinput --nodata
 
 # Install npm dependencies
@@ -74,7 +71,7 @@ system. This will allow you to create any number of projects without issue.
 - Flake8 (to get both PEP8 linting and error checking)
 - virtualenv and virtualenvwrapper
 - libjpeg
-- Node JS (LTS version is preferred)
+- Node JS (version 6 or later required)
 - npm (usually comes with Node)
 
 In a Ubuntu machine, this should be enough:
