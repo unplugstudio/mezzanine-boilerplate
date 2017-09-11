@@ -45,6 +45,11 @@ p {
 	// Collapse empty paragraphs with just <br>
 	> br:only-child {
 		display: none;
+
+		// Except if that <br> is inside a TinyMCE editor
+		&[data-mce-bogus] {
+			display: inline;
+		}
 	}
 }
 
