@@ -67,7 +67,7 @@ urlpatterns += [
 
     # url("^$", mezzanine.blog.views.blog_post_list, name="home"),
 
-    url("^ui-elements$", TemplateView.as_view(template_name="ui_elements.html")),
+    url("^ui-elements/$", TemplateView.as_view(template_name="ui_elements.html")),
 
     # MEZZANINE'S URLS
     # ----------------

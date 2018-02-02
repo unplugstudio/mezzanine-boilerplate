@@ -39,7 +39,7 @@ git clone https://gitlab.com/jerivas/mezzanine-boilerplate.git
 # Create the project
 mkvirtualenv -p python3.6 project_name
 pip install mezzanine
-mezzanine-project --template mezzanine-boilerplate/project_template --extension py,json,md,sublime-project project_name
+mezzanine-project --template mezzanine-boilerplate/project_template --extension py,json,md project_name
 cd project_name
 pip install -r requirements.txt
 python manage.py createdb --noinput --nodata
